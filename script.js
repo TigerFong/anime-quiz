@@ -160,7 +160,7 @@ function showRoom() {
     // 绘制雷达图
     setTimeout(() => {
         drawRadar(percentages);
-    }, 500);
+    }, 300);
 }
 
 // === 雷达图绘制 ===

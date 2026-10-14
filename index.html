@@ -9,97 +9,159 @@
 <body>
     <div id="bgLayer">
         <div class="bg-overlay"></div>
+        <div class="bg-glow"></div>
     </div>
 
     <div class="app">
-        <!-- 开始页 -->
-        <section id="startScreen" class="screen active">
-            <div class="ui-panel">
-                <div class="corner-deco top-left"></div>
-                <div class="corner-deco bottom-right"></div>
-                <h1 class="title">二次元成分检测器</h1>
-                <p class="subtitle">测出你的二次元浓度，打造专属房间</p>
-                <div class="divider"></div>
-                <p class="length-label">选择题目数量</p>
-                <div class="length-options">
-                    <button class="length-btn" data-count="15">15 题<br><span>速测</span></button>
-                    <button class="length-btn active" data-count="30">30 题<br><span>标准</span></button>
-                    <button class="length-btn" data-count="50">50 题<br><span>深度</span></button>
-                </div>
-                <button id="startBtn" class="btn-primary">开始检测</button>
-            </div>
-        </section>
+        <!-- 左侧装饰 -->
+        <aside class="side side-left">
+            <div class="side-line"></div>
+            <div class="side-text">S E C R E T &nbsp; A N A L Y S I S</div>
+            <div class="side-line"></div>
+        </aside>
 
-        <!-- 答题页 -->
-        <section id="quizScreen" class="screen">
-            <div class="ui-panel quiz-panel">
+        <!-- 主面板 -->
+        <main class="main-panel">
+            <!-- 开始页 -->
+            <section id="startScreen" class="screen active">
+                <!-- 顶部状态条 -->
+                <div class="panel-header">
+                    <span class="status-dot"></span>
+                    <span class="status-text">SYSTEM ONLINE</span>
+                    <span class="status-bar"></span>
+                    <span class="status-code">v2.0.1</span>
+                </div>
+
+                <!-- 标题 -->
+                <div class="panel-title-area">
+                    <h1 class="panel-title">二次元成分检测器</h1>
+                    <div class="panel-subtitle">ANIME COMPONENT ANALYZER</div>
+                </div>
+
+                <!-- 分割装饰 -->
+                <div class="panel-divider">
+                    <span class="divider-line"></span>
+                    <span class="divider-icon">◆</span>
+                    <span class="divider-line"></span>
+                </div>
+
+                <!-- 描述 -->
+                <p class="panel-desc">测出你的二次元浓度，打造专属房间</p>
+
+                <!-- 题数选择 -->
+                <div class="count-section">
+                    <div class="count-label">
+                        <span class="label-dot"></span>
+                        选择题目数量
+                    </div>
+                    <div class="count-options">
+                        <button class="length-btn" data-count="15">
+                            <span class="count-num">15</span>
+                            <span class="count-tag">速测</span>
+                        </button>
+                        <button class="length-btn active" data-count="30">
+                            <span class="count-num">30</span>
+                            <span class="count-tag">标准</span>
+                        </button>
+                        <button class="length-btn" data-count="50">
+                            <span class="count-num">50</span>
+                            <span class="count-tag">深度</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 开始按钮 -->
+                <button id="startBtn" class="start-btn">
+                    <span class="start-btn-inner">开 始 检 测</span>
+                </button>
+
+                <div class="panel-hint">本测试可能引发自我怀疑，请谨慎作答</div>
+            </section>
+
+            <!-- 答题页 -->
+            <section id="quizScreen" class="screen">
+                <div class="panel-header">
+                    <span class="status-dot"></span>
+                    <span class="status-text">ANALYZING...</span>
+                    <span class="status-bar"></span>
+                    <span class="status-code"><span id="currentQ">1</span>/<span id="totalQ">30</span></span>
+                </div>
+
                 <div class="progress-wrap">
-                    <div class="progress-text"><span id="currentQ">1</span> / <span id="totalQ">30</span></div>
                     <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
                 </div>
+
                 <h2 id="questionText" class="question-text"></h2>
                 <div id="options" class="options"></div>
-            </div>
-        </section>
+            </section>
+        </main>
+
+        <!-- 右侧装饰 -->
+        <aside class="side side-right">
+            <div class="side-line"></div>
+            <div class="side-text">V E R S I O N &nbsp; 2 . 0 . 1</div>
+            <div class="side-line"></div>
+        </aside>
     </div>
 
-    <!-- 房间页 -->
+    <!-- 房间页（滑动分屏） -->
     <section id="roomScreen" class="screen">
         <button id="retryBtn" class="retry-btn">↻ 重新测试</button>
-        
+
         <div class="room-scroll-container">
-            <!-- 第一屏 -->
-            <div class="room-page room-page-1">
-                <!-- 图片比例容器，物品都钉在这里面 -->
+            <!-- 第一屏：雷达图 -->
+            <div class="room-page radar-page">
+                <div class="radar-title">成 分 雷 达 图</div>
+                <div class="radar-wrapper">
+                    <canvas id="radarCanvas" width="420" height="420"></canvas>
+                </div>
+                <div class="radar-legend">
+                    <span><i class="dot dot-anime"></i>番剧</span>
+                    <span><i class="dot dot-gacha"></i>二游</span>
+                    <span><i class="dot dot-jrpg"></i>JRPG</span>
+                    <span><i class="dot dot-meme"></i>梗/同人</span>
+                    <span><i class="dot dot-music"></i>音乐</span>
+                    <span><i class="dot dot-merch"></i>周边</span>
+                </div>
+                <div class="scroll-hint">
+                    <span>向下滑动进入房间</span>
+                    <span class="arrow">▼</span>
+                </div>
+            </div>
+
+            <!-- 第二屏：房间 -->
+            <div class="room-page room-page-bg">
                 <div class="room-aspect">
                     <img src="images/room_bg.png" class="room-bg" alt="房间">
-                    
-                    <!-- 6 个物品，绝对定位到图片上的真实位置 -->
-                    <!-- 番剧：左侧大显示器 -->
+
                     <div class="hotspot" id="hotspot-anime" data-dim="anime" style="left: 12%; top: 50%;">
                         <div class="hotspot-ring"></div>
                         <div class="hotspot-label">番剧</div>
                     </div>
-                    <!-- 二游：显示器旁的小设备 -->
                     <div class="hotspot" id="hotspot-gacha" data-dim="gacha" style="left: 23%; top: 50%;">
                         <div class="hotspot-ring"></div>
                         <div class="hotspot-label">二游</div>
                     </div>
-                    <!-- JRPG：键盘下方的手柄 -->
                     <div class="hotspot" id="hotspot-jrpg" data-dim="jrpg" style="left: 13%; top: 71%;">
                         <div class="hotspot-ring"></div>
                         <div class="hotspot-label">JRPG</div>
                     </div>
-                    <!-- 梗/同人：右侧桌上的数位屏 -->
                     <div class="hotspot" id="hotspot-meme" data-dim="meme" style="left: 77%; top: 55%;">
                         <div class="hotspot-ring"></div>
                         <div class="hotspot-label">梗/同人</div>
                     </div>
-                    <!-- 音乐：右侧墙上的耳机 -->
                     <div class="hotspot" id="hotspot-music" data-dim="music" style="left: 84.5%; top: 40%;">
                         <div class="hotspot-ring"></div>
                         <div class="hotspot-label">音乐</div>
                     </div>
-                    <!-- 周边：右侧书架上的玩偶 -->
                     <div class="hotspot" id="hotspot-merch" data-dim="merch" style="left: 92%; top: 60%;">
                         <div class="hotspot-ring"></div>
                         <div class="hotspot-label">周边</div>
                     </div>
                 </div>
-
-                <div class="scroll-hint">
-                    <span>向下滑动查看成分雷达图</span>
-                    <span class="arrow">▼</span>
-                </div>
-            </div>
-
-            <!-- 第二屏：雷达图 -->
-            <div class="room-page room-page-2">
-                <div class="radar-container">
-                    <h2 class="radar-title">成 分 雷 达 图</h2>
-                    <div class="radar-wrapper">
-                        <canvas id="radarCanvas" width="400" height="400"></canvas>
-                    </div>
+                <div class="scroll-hint scroll-hint-top">
+                    <span class="arrow">▲</span>
+                    <span>向上滑动返回雷达图</span>
                 </div>
             </div>
         </div>
