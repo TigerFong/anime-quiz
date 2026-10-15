@@ -838,3 +838,409 @@ body.room-mode #bgLayer { display: none; }
     transform: translateY(-2px);
     box-shadow: 0 12px 35px rgba(168, 85, 247, 0.6);
 }
+
+/* ====== 难度/连击 ====== */
+.quiz-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    font-family: monospace;
+}
+
+.quiz-difficulty {
+    color: #c4b5fd;
+}
+
+.quiz-combo {
+    color: #ec4899;
+    font-weight: 700;
+    text-shadow: 0 0 10px rgba(236, 72, 153, 0.6);
+    transition: all 0.3s;
+}
+
+/* ====== 随机彩蛋 ====== */
+.easter-egg {
+    font-size: 11px;
+    color: #fbbf24;
+    letter-spacing: 1px;
+    padding: 6px 12px;
+    background: rgba(251, 191, 36, 0.08);
+    border-left: 2px solid #fbbf24;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    animation: eggIn 0.4s ease-out;
+}
+
+.easter-egg.hidden {
+    display: none;
+}
+
+@keyframes eggIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ====== 角色陪伴 ====== */
+.companion {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    z-index: 50;
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.companion.hidden {
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+}
+
+.companion-bubble {
+    background: rgba(20, 10, 35, 0.92);
+    border: 1px solid rgba(236, 72, 153, 0.5);
+    border-radius: 12px;
+    padding: 10px 16px;
+    color: #fff;
+    font-size: 13px;
+    line-height: 1.5;
+    max-width: 220px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(236, 72, 153, 0.2);
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+}
+
+.companion-bubble.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.companion-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: 14px;
+    right: -6px;
+    width: 10px;
+    height: 10px;
+    background: rgba(20, 10, 35, 0.92);
+    border-right: 1px solid rgba(236, 72, 153, 0.5);
+    border-top: 1px solid rgba(236, 72, 153, 0.5);
+    transform: rotate(45deg);
+}
+
+.companion-img {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: top center;
+    border: 2px solid #ec4899;
+    box-shadow: 0 0 20px rgba(236, 72, 153, 0.6);
+    background: rgba(20, 10, 35, 0.8);
+    transition: opacity 0.3s ease;
+    animation: companionFloat 3s ease-in-out infinite alternate;
+}
+
+@keyframes companionFloat {
+    from { transform: translateY(0); }
+    to   { transform: translateY(-6px); }
+}
+
+/* ====== 开箱动画 ====== */
+.box-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(5, 2, 12, 0.92);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 500;
+    animation: boxLayerIn 0.5s ease-out;
+}
+
+.box-layer.hidden { display: none; }
+
+@keyframes boxLayerIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.box-card {
+    width: 260px;
+    height: 340px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    animation: boxFloat 3s ease-in-out infinite alternate;
+}
+
+@keyframes boxFloat {
+    from { transform: translateY(0); }
+    to   { transform: translateY(-10px); }
+}
+
+.box-card.flipped {
+    transform: rotateY(180deg);
+    animation: none;
+}
+
+.box-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    border: 2px solid rgba(236, 72, 153, 0.6);
+    background:
+        radial-gradient(circle at 50% 30%, rgba(168, 85, 247, 0.3) 0%, transparent 60%),
+        linear-gradient(180deg, rgba(30, 15, 45, 0.95) 0%, rgba(15, 8, 30, 0.95) 100%);
+    box-shadow: 0 0 40px rgba(236, 72, 153, 0.4), inset 0 0 30px rgba(168, 85, 247, 0.2);
+}
+
+.box-back {
+    transform: rotateY(180deg);
+    border-color: rgba(168, 85, 247, 0.6);
+    box-shadow: 0 0 40px rgba(168, 85, 247, 0.4), inset 0 0 30px rgba(236, 72, 153, 0.2);
+}
+
+.box-icon {
+    font-size: 48px;
+    color: #ec4899;
+    text-shadow: 0 0 30px #ec4899;
+    animation: boxIconPulse 2s ease-in-out infinite;
+}
+
+.box-back .box-icon {
+    color: #a855f7;
+    text-shadow: 0 0 30px #a855f7;
+}
+
+@keyframes boxIconPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50%      { transform: scale(1.15); opacity: 0.7; }
+}
+
+.box-title {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: #fff;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+.box-hint {
+    font-size: 11px;
+    color: #b8b0d0;
+    letter-spacing: 2px;
+    margin-top: 8px;
+    animation: hintBlink 1.5s ease-in-out infinite;
+}
+
+@keyframes hintBlink {
+    0%, 100% { opacity: 0.4; }
+    50%      { opacity: 1; }
+}
+
+/* 手机端把角色陪伴缩小 */
+@media (max-width: 900px) {
+    .companion {
+        bottom: 20px;
+        right: 16px;
+    }
+    .companion-img {
+        width: 56px;
+        height: 56px;
+    }
+    .companion-bubble {
+        font-size: 12px;
+        padding: 8px 12px;
+        max-width: 160px;
+    }
+}
+
+/* ====== 特效 1：背景漂浮粒子 ====== */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+        radial-gradient(2px 2px at 15% 30%, rgba(236, 72, 153, 0.6), transparent),
+        radial-gradient(2px 2px at 45% 70%, rgba(168, 85, 247, 0.5), transparent),
+        radial-gradient(1px 1px at 70% 20%, rgba(255, 255, 255, 0.4), transparent),
+        radial-gradient(2px 2px at 85% 60%, rgba(236, 72, 153, 0.4), transparent),
+        radial-gradient(1px 1px at 30% 85%, rgba(168, 85, 247, 0.5), transparent),
+        radial-gradient(1px 1px at 60% 45%, rgba(255, 255, 255, 0.3), transparent);
+    animation: particleDrift 20s linear infinite;
+}
+
+@keyframes particleDrift {
+    0%   { transform: translateY(0) translateX(0); }
+    100% { transform: translateY(-30px) translateX(10px); }
+}
+
+/* ====== 特效 2：主面板边缘流光 ====== */
+.main-panel::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 20px;
+    padding: 1px;
+    background: linear-gradient(
+        120deg,
+        transparent 0%,
+        transparent 40%,
+        rgba(236, 72, 153, 0.6) 50%,
+        transparent 60%,
+        transparent 100%
+    );
+    background-size: 200% 200%;
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    animation: edgeFlow 4s linear infinite;
+    opacity: 0.7;
+}
+
+@keyframes edgeFlow {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ====== 特效 3：进度条流光 ====== */
+.progress-fill {
+    background: linear-gradient(
+        90deg,
+        #a855f7 0%,
+        #ec4899 50%,
+        #a855f7 100%
+    );
+    background-size: 200% 100%;
+    animation: progressFlow 2s linear infinite;
+}
+
+@keyframes progressFlow {
+    0%   { background-position: 0% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/* ====== 特效 4：选项悬停光效跟随 ====== */
+.option {
+    position: relative;
+    overflow: hidden;
+}
+
+.option::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(236, 72, 153, 0.15),
+        transparent
+    );
+    transition: left 0.5s ease;
+    pointer-events: none;
+}
+
+.option:hover::before {
+    left: 100%;
+}
+
+/* ====== 特效 5：答对/答错反馈动画 ====== */
+
+/* 答对：绿色光波扩散 */
+@keyframes correctBurst {
+    0%   { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+    70%  { box-shadow: 0 0 0 20px rgba(74, 222, 128, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+}
+
+.option.correct {
+    animation: correctBurst 0.6s ease-out;
+}
+
+/* 答错：红色抖动 */
+@keyframes wrongShake {
+    0%, 100% { transform: translateX(0); }
+    20%      { transform: translateX(-6px); }
+    40%      { transform: translateX(6px); }
+    60%      { transform: translateX(-4px); }
+    80%      { transform: translateX(4px); }
+}
+
+.option.wrong {
+    animation: wrongShake 0.4s ease-out;
+}
+
+/* ====== 特效 6：角色陪伴跳动 ====== */
+.companion-img.bounce {
+    animation: companionBounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes companionBounce {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+/* ====== 特效 7：标题呼吸光 ====== */
+.panel-title {
+    animation: titleGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes titleGlow {
+    from { filter: drop-shadow(0 0 8px rgba(196, 181, 253, 0.3)); }
+    to   { filter: drop-shadow(0 0 20px rgba(236, 72, 153, 0.5)); }
+}
+
+/* ====== 特效 8：难度标签闪动 ====== */
+.quiz-difficulty {
+    position: relative;
+}
+
+.quiz-difficulty::before {
+    content: '';
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    background: #c4b5fd;
+    border-radius: 50%;
+    margin-right: 6px;
+    box-shadow: 0 0 8px #c4b5fd;
+    animation: dotBlink 1.5s ease-in-out infinite;
+    vertical-align: middle;
+}
+.progress-fill.progress-fill-active {
+    animation: progressFlow 2s linear infinite;
+}

@@ -6,7 +6,13 @@ let activeQuestions = [];
 let selectedCount = 30;
 let answered = false;
 
-// 按维度分组
+// 游戏元素状态
+let comboCount = 0;
+let wrongStreak = 0;
+let companionTimer = null;
+let maxComboThisRun = 0;
+
+// === 抽题 ===
 function groupByDim() {
     const groups = { anime: [], gacha: [], jrpg: [], meme: [], music: [], merch: [] };
     QUESTIONS.forEach(q => {
@@ -15,7 +21,6 @@ function groupByDim() {
     return groups;
 }
 
-// 按难度拆分
 function splitByDifficulty(list) {
     return {
         easy: list.filter(q => q.difficulty === 'easy'),
@@ -24,7 +29,6 @@ function splitByDifficulty(list) {
     };
 }
 
-// 洗牌
 function shuffle(arr) {
     const a = [...arr];
     for (let i = a.length - 1; i > 0; i--) {
@@ -34,32 +38,26 @@ function shuffle(arr) {
     return a;
 }
 
-// 抽题：80% 中低 + 20% 高难
 function drawQuestions(count) {
     const groups = groupByDim();
     const dims = ['anime', 'gacha', 'jrpg', 'meme', 'music', 'merch'];
-
     const lowMediumCount = Math.round(count * 0.8);
     const hardCount = count - lowMediumCount;
-
     const perDimLow = Math.floor(lowMediumCount / 6);
-    let lowRemainder = lowMediumCount - perDimLow * 6;
-
     const perDimHard = Math.floor(hardCount / 6);
+    let lowRemainder = lowMediumCount - perDimLow * 6;
     let hardRemainder = hardCount - perDimHard * 6;
 
     const selected = [];
     const usedIds = new Set();
+    const lowPools = {}, hardPools = {};
 
-    const lowPools = {};
-    const hardPools = {};
     dims.forEach(dim => {
-        const split = splitByDifficulty(groups[dim]);
-        lowPools[dim] = shuffle([...split.easy, ...split.medium]);
-        hardPools[dim] = shuffle([...split.hard]);
+        const s = splitByDifficulty(groups[dim]);
+        lowPools[dim] = shuffle([...s.easy, ...s.medium]);
+        hardPools[dim] = shuffle([...s.hard]);
     });
 
-    // 先抽中低题
     dims.forEach(dim => {
         let take = perDimLow;
         if (lowRemainder > 0) { take++; lowRemainder--; }
@@ -68,7 +66,6 @@ function drawQuestions(count) {
         });
     });
 
-    // 再抽高难题
     dims.forEach(dim => {
         let take = perDimHard;
         if (hardRemainder > 0) { take++; hardRemainder--; }
@@ -77,13 +74,83 @@ function drawQuestions(count) {
         });
     });
 
-    // 不够就从总池子补
     if (selected.length < count) {
         const rest = shuffle(QUESTIONS.filter(q => !usedIds.has(q.id)));
         selected.push(...rest.slice(0, count - selected.length));
     }
 
     return shuffle(selected);
+}
+
+// === 角色陪伴 ===
+const COMPANION_MSG = {
+    correct: ['不错。', '答对了。', '可以啊。', '有点东西。', '保持状态。', '嗯。'],
+    wrong: ['……没关系。', '这题有点难。', '别在意。', '下一题加油。', '记一下这个。', '这种题就是陷阱。'],
+    streak5: ['稳得一批。', '你今天状态很好。', '连对五题，厉害。', '这个水平，可以了。'],
+    streak3wrong: ['……要不要休息一下？', '别急，慢慢来。', '深呼吸。', '下一题轻松点。']
+};
+
+function showBubble(text) {
+    const bubble = document.getElementById('companionBubble');
+    bubble.textContent = text;
+    bubble.classList.add('show');
+    if (companionTimer) clearTimeout(companionTimer);
+    companionTimer = setTimeout(() => {
+        bubble.classList.remove('show');
+    }, 2200);
+}
+
+function updateCompanion(dim, messageType) {
+    const char = CHARACTERS[dim];
+    if (!char) return;
+    const img = document.getElementById('companionImg');
+    const companion = document.getElementById('companion');
+    companion.classList.remove('hidden');
+
+    if (img.getAttribute('src') !== char.img) {
+        img.style.opacity = 0;
+        setTimeout(() => {
+            img.src = char.img;
+            img.style.opacity = 1;
+        }, 150);
+    }
+
+    if (messageType && COMPANION_MSG[messageType]) {
+        const pool = COMPANION_MSG[messageType];
+        showBubble(pool[Math.floor(Math.random() * pool.length)]);
+    }
+}
+
+// === 难度自适应 ===
+function adaptDifficulty() {
+    const nextIdx = currentQIndex + 1;
+    if (nextIdx >= activeQuestions.length) return;
+
+    let targetDifficulty = null;
+    if (comboCount >= 5) targetDifficulty = 'hard';
+    else if (wrongStreak >= 3) targetDifficulty = 'easy';
+    if (!targetDifficulty) return;
+
+    const nextDim = activeQuestions[nextIdx].dim;
+
+    // 优先在后续题目里找同维度、符合难度的题
+    for (let i = nextIdx + 1; i < activeQuestions.length; i++) {
+        if (activeQuestions[i].difficulty === targetDifficulty && activeQuestions[i].dim === nextDim) {
+            [activeQuestions[nextIdx], activeQuestions[i]] = [activeQuestions[i], activeQuestions[nextIdx]];
+            comboCount = 0;
+            wrongStreak = 0;
+            return;
+        }
+    }
+    // 找不到同维度的，就找任意同难度的
+    for (let i = nextIdx + 1; i < activeQuestions.length; i++) {
+        if (activeQuestions[i].difficulty === targetDifficulty) {
+            [activeQuestions[nextIdx], activeQuestions[i]] = [activeQuestions[i], activeQuestions[nextIdx]];
+            comboCount = 0;
+            wrongStreak = 0;
+            return;
+        }
+    }
 }
 
 // === 页面元素 ===
@@ -96,6 +163,9 @@ const progressFill = document.getElementById('progressFill');
 const currentQEl = document.getElementById('currentQ');
 const totalQEl = document.getElementById('totalQ');
 const characterPopup = document.getElementById('characterPopup');
+const companion = document.getElementById('companion');
+const boxLayer = document.getElementById('boxLayer');
+const boxCard = document.getElementById('boxCard');
 
 // === 初始化 ===
 document.getElementById('startBtn').addEventListener('click', startQuiz);
@@ -108,12 +178,24 @@ document.querySelectorAll('.length-btn').forEach(btn => {
     });
 });
 
+// 开箱卡片点击
+boxCard.addEventListener('click', () => {
+    if (!boxCard.classList.contains('flipped')) {
+        boxCard.classList.add('flipped');
+    } else {
+        boxLayer.classList.add('hidden');
+        setTimeout(showRoom, 300);
+    }
+});
+
 // === 开始答题 ===
 function startQuiz() {
     activeQuestions = drawQuestions(selectedCount);
-
     userScores = { anime: 0, gacha: 0, jrpg: 0, meme: 0, music: 0, merch: 0 };
     userQuestionCount = { anime: 0, gacha: 0, jrpg: 0, meme: 0, music: 0, merch: 0 };
+    comboCount = 0;
+    wrongStreak = 0;
+    maxComboThisRun = 0;
 
     activeQuestions.forEach(q => { userQuestionCount[q.dim]++; });
 
@@ -123,6 +205,7 @@ function startQuiz() {
     totalQEl.textContent = activeQuestions.length;
 
     document.body.classList.remove('room-mode');
+    companion.classList.remove('hidden');
     renderQuestion();
 }
 
@@ -132,7 +215,32 @@ function renderQuestion() {
     questionText.textContent = q.question;
     currentQEl.textContent = currentQIndex + 1;
     progressFill.style.width = (currentQIndex / activeQuestions.length * 100) + '%';
+    progressFill.classList.add('progress-fill-active');
     answered = false;
+
+    // 难度标签
+    const diffLabel = document.getElementById('quizDifficulty');
+    const difficultyMap = { easy: '入门', medium: '中等', hard: '高难' };
+    const dimMap = { anime: '番剧', gacha: '二游', jrpg: 'JRPG', meme: '梗/同人', music: '音乐', merch: '周边' };
+    diffLabel.textContent = `[ ${dimMap[q.dim]} · ${difficultyMap[q.difficulty]} ]`;
+
+    // 角色陪伴
+    updateCompanion(q.dim, null);
+
+    // 随机彩蛋
+    const eggEl = document.getElementById('easterEgg');
+    if (Math.random() < 0.08) {
+        const eggs = [
+            '出题人说他也不知道答案',
+            '这道题有点怪，你自己看着办',
+            '注意：本题包含隐藏知识',
+            '这道题曾难倒过 90% 的测试者'
+        ];
+        eggEl.textContent = '* ' + eggs[Math.floor(Math.random() * eggs.length)];
+        eggEl.classList.remove('hidden');
+    } else {
+        eggEl.classList.add('hidden');
+    }
 
     optionsEl.innerHTML = '';
     q.options.forEach((opt) => {
@@ -150,15 +258,54 @@ function selectOption(opt, btnEl, q) {
     answered = true;
 
     const allBtns = optionsEl.querySelectorAll('.option');
+    const comboEl = document.getElementById('quizCombo');
 
     if (opt.correct) {
         btnEl.classList.add('correct');
         userScores[q.dim]++;
+        comboCount++;
+        wrongStreak = 0;
+        if (comboCount > maxComboThisRun) maxComboThisRun = comboCount;
+
+        if (comboCount >= 5 && comboCount % 5 === 0) {
+            updateCompanion(q.dim, 'streak5');
+            comboEl.textContent = `COMBO ×${comboCount}`;
+        } else {
+            updateCompanion(q.dim, 'correct');
+            comboEl.textContent = comboCount > 1 ? `×${comboCount}` : '';
+
+            // 角色跳动
+            const compImg = document.getElementById('companionImg');
+            compImg.classList.remove('bounce');
+            void compImg.offsetWidth;
+            compImg.classList.add('bounce');
+        }
     } else {
         btnEl.classList.add('wrong');
+        comboCount = 0;
+        wrongStreak++;
+
+        // 触发面板震动（用 JS 改 transform，避免触发 CSS 入场动画）
+        const panel = document.querySelector('.main-panel');
+        const shakeSeq = [0, -4, 4, -3, 3, -1, 0];
+        let shakeIdx = 0;
+        const shakeTimer = setInterval(() => {
+            panel.style.transform = `translateX(${shakeSeq[shakeIdx]}px)`;
+            shakeIdx++;
+            if (shakeIdx >= shakeSeq.length) {
+                clearInterval(shakeTimer);
+                panel.style.transform = '';
+            }
+        }, 40);
         allBtns.forEach((b, i) => {
             if (q.options[i].correct) b.classList.add('correct');
         });
+        if (wrongStreak >= 3) {
+            updateCompanion(q.dim, 'streak3wrong');
+        } else {
+            updateCompanion(q.dim, 'wrong');
+        }
+        comboEl.textContent = '';
     }
 
     allBtns.forEach(b => b.style.pointerEvents = 'none');
@@ -177,12 +324,17 @@ function selectOption(opt, btnEl, q) {
     nextBtn.className = 'next-btn';
     nextBtn.textContent = currentQIndex + 1 < activeQuestions.length ? '下 一 题' : '查 看 结 果';
     nextBtn.addEventListener('click', () => {
+        adaptDifficulty();
         currentQIndex++;
         if (currentQIndex < activeQuestions.length) {
             renderQuestion();
         } else {
             progressFill.style.width = '100%';
-            setTimeout(showRoom, 300);
+            companion.classList.add('hidden');
+            setTimeout(() => {
+                boxLayer.classList.remove('hidden');
+                boxCard.classList.remove('flipped');
+            }, 300);
         }
     });
     optionsEl.appendChild(nextBtn);
@@ -193,8 +345,9 @@ function selectOption(opt, btnEl, q) {
 // === 显示房间 ===
 function showRoom() {
     quizScreen.classList.remove('active');
-    document.getElementById('roomScreen').classList.add('active');
+    roomScreen.classList.add('active');
     document.body.classList.add('room-mode');
+    companion.classList.add('hidden');
 
     const percentages = {};
 
@@ -207,18 +360,13 @@ function showRoom() {
         const hotspotEl = document.getElementById(`hotspot-${dim}`);
         hotspotEl.classList.remove('mid', 'high');
 
-        if (percent >= 0.7) {
-            hotspotEl.classList.add('high');
-        } else if (percent >= 0.4) {
-            hotspotEl.classList.add('mid');
-        }
+        if (percent >= 0.7) hotspotEl.classList.add('high');
+        else if (percent >= 0.4) hotspotEl.classList.add('mid');
 
         hotspotEl.onclick = () => handleItemClick(dim, percent);
     });
 
-    setTimeout(() => {
-        drawRadar(percentages);
-    }, 400);
+    setTimeout(() => drawRadar(percentages), 400);
 }
 
 // === 雷达图 ===
@@ -337,6 +485,7 @@ function drawRadar(percentages) {
 // === 角色对话 ===
 let currentNodeId = 'start';
 let currentDialogueDim = '';
+let currentTier = 'low';
 let clickCounts = {};
 let pendingSpecialNode = null;
 
@@ -348,49 +497,18 @@ function handleItemClick(dim, percent) {
     document.getElementById('charName').textContent = `${char.name} · ${char.title}`;
     currentDialogueDim = dim;
 
-    const percentages = {};
-    Object.keys(userScores).forEach(d => {
-        percentages[d] = userQuestionCount[d] > 0 ? userScores[d] / userQuestionCount[d] : 0;
-    });
+    let tier = 'low';
+    if (percent >= 0.85) tier = 'high';
+    else if (percent >= 0.6) tier = 'mid';
 
-    pendingSpecialNode = null;
-    if (percent >= 0.85 && DIALOGUES[dim]['special_high']) {
-        pendingSpecialNode = 'special_high';
-    } else {
-        const combos = {
-            anime: ['music'], gacha: ['merch'], jrpg: ['music'],
-            meme: ['merch', 'gacha'], music: ['anime', 'jrpg'], merch: ['gacha', 'meme']
-        };
-        if (combos[dim] && DIALOGUES[dim]['special_combo']) {
-            for (let otherDim of combos[dim]) {
-                if (percentages[dim] > 0.7 && percentages[otherDim] > 0.7) {
-                    pendingSpecialNode = 'special_combo';
-                    break;
-                }
-            }
-        }
-    }
-
-    clickCounts[dim] = (clickCounts[dim] || 0) + 1;
-    if (clickCounts[dim] >= 5 && DIALOGUES[dim]['easter_egg']) {
-        pendingSpecialNode = 'easter_egg';
-        clickCounts[dim] = 0;
-    } else if (clickCounts[dim] >= 5) {
-        clickCounts[dim] = 0;
-    }
-
+    currentTier = tier;
     currentNodeId = 'start';
     characterPopup.classList.remove('hidden');
     renderDialogueNode();
 }
 
 function renderDialogueNode() {
-    if (currentNodeId === 'end' && pendingSpecialNode) {
-        currentNodeId = pendingSpecialNode;
-        pendingSpecialNode = null;
-    }
-
-    const node = DIALOGUES[currentDialogueDim][currentNodeId];
+    const node = DIALOGUES[currentDialogueDim][currentTier][currentNodeId];
     const textEl = document.getElementById('dialogueText');
     const optionsEl = document.getElementById('dialogueOptions');
 
@@ -423,8 +541,11 @@ document.getElementById('retryBtn').addEventListener('click', () => {
     userQuestionCount = { anime: 0, gacha: 0, jrpg: 0, meme: 0, music: 0, merch: 0 };
     currentNodeId = 'start';
     currentDialogueDim = '';
+    currentTier = 'low';
     clickCounts = {};
     pendingSpecialNode = null;
+    comboCount = 0;
+    wrongStreak = 0;
 
     document.querySelectorAll('.hotspot').forEach(item => {
         item.classList.remove('mid', 'high');
