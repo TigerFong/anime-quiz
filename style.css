@@ -104,6 +104,9 @@ body.room-mode #bgLayer { display: none; }
     position: relative;
     width: 100%;
     max-width: 480px;
+    max-height: 90vh;        /* 【新增】防止溢出屏幕 */
+    overflow-y: auto;        /* 【新增】内容太长时可滚动 */
+    scrollbar-width: none;   /* 【新增】隐藏滚动条 */
     padding: 40px 36px 32px;
     background: rgba(15, 8, 30, 0.75);
     border: 1px solid rgba(167, 139, 250, 0.25);
@@ -114,19 +117,21 @@ body.room-mode #bgLayer { display: none; }
         0 0 80px rgba(167, 139, 250, 0.1),
         inset 0 1px 0 rgba(255, 255, 255, 0.05);
     animation: panelIn 0.5s ease-out;
-    overflow: hidden;
 }
 
-/* 顶部发光渐变条 */
-.main-panel::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 20%;
-    right: 20%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, #a78bfa, #ec4899, #a78bfa, transparent);
-    filter: blur(0.5px);
+.main-panel::-webkit-scrollbar {
+    display: none;           /* 【新增】Chrome/Safari 隐藏滚动条 */
+}
+
+/* 【新增】用直接子选择器，确保两个 screen 互斥显示 */
+.main-panel > .screen {
+    display: none;
+}
+
+.main-panel > .screen.active {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }
 
 @keyframes panelIn {
@@ -255,7 +260,7 @@ body.room-mode #bgLayer { display: none; }
 
 .count-options {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
 }
 
@@ -589,11 +594,11 @@ body.room-mode #bgLayer { display: none; }
     50%      { transform: translateX(-50%) translateY(-6px); }
 }
 
-/* 热点 */
+/* ====== 热点（游戏锁定风格光圈） ====== */
 .hotspot {
     position: absolute;
-    width: 70px;
-    height: 70px;
+    width: 90px;
+    height: 90px;
     transform: translate(-50%, -50%);
     cursor: pointer;
     display: flex;
@@ -601,39 +606,148 @@ body.room-mode #bgLayer { display: none; }
     justify-content: center;
     pointer-events: none;
     opacity: 0;
-    transition: opacity 0.4s ease;
+    transition: opacity 0.5s ease;
     z-index: 10;
 }
-.hotspot-ring {
+
+/* 外圈：旋转的虚线环 */
+.hotspot::before {
+    content: '';
     position: absolute;
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    border: 3px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-    transition: all 0.3s ease;
+    border: 1.5px dashed currentColor;
+    opacity: 0.7;
+    animation: rotate 12s linear infinite;
+    transition: all 0.4s ease;
 }
+
+/* 内圈：实线环 + 内外发光 */
+.hotspot-ring {
+    position: absolute;
+    width: 78%;
+    height: 78%;
+    border-radius: 50%;
+    border: 2px solid currentColor;
+    box-shadow:
+        0 0 12px currentColor,
+        0 0 24px currentColor,
+        inset 0 0 15px rgba(255, 255, 255, 0.15);
+    transition: all 0.4s ease;
+}
+
+/* 四个角标：十字定位标记 */
+.hotspot::after {
+    content: '';
+    position: absolute;
+    width: 120%;
+    height: 120%;
+    background:
+        /* 上 */
+        linear-gradient(currentColor, currentColor) no-repeat 50% 0 / 1px 8px,
+        /* 下 */
+        linear-gradient(currentColor, currentColor) no-repeat 50% 100% / 1px 8px,
+        /* 左 */
+        linear-gradient(currentColor, currentColor) no-repeat 0 50% / 8px 1px,
+        /* 右 */
+        linear-gradient(currentColor, currentColor) no-repeat 100% 50% / 8px 1px;
+    opacity: 0.9;
+    transition: all 0.4s ease;
+}
+
+/* 标签：带小三角指向物品 */
 .hotspot-label {
     position: absolute;
-    bottom: -28px;
-    background: rgba(15, 10, 30, 0.9);
-    color: #fff;
-    font-size: 12px;
+    bottom: -32px;
+    padding: 3px 12px;
+    background: rgba(15, 10, 30, 0.85);
+    color: currentColor;
+    font-size: 9px;
     font-weight: 700;
-    padding: 2px 10px;
-    border-radius: 10px;
+    letter-spacing: 2px;
+    border-radius: 4px;
     white-space: nowrap;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(6px);
+    border: 1px solid currentColor;
+    box-shadow: 0 0 10px currentColor;
+    transition: all 0.4s ease;
 }
-.hotspot.mid { opacity: 0.85; pointer-events: auto; }
-.hotspot.mid .hotspot-ring { border-color: #a78bfa; box-shadow: 0 0 20px rgba(167, 139, 250, 0.6), inset 0 0 15px rgba(167, 139, 250, 0.3); }
-.hotspot.mid .hotspot-label { border-color: #a78bfa; color: #a78bfa; }
-.hotspot.high { opacity: 1; pointer-events: auto; }
-.hotspot.high .hotspot-ring { border-color: #ec4899; box-shadow: 0 0 30px rgba(236, 72, 153, 0.9), inset 0 0 20px rgba(236, 72, 153, 0.4); animation: pulse 1.5s infinite; }
-.hotspot.high .hotspot-label { border-color: #ec4899; color: #ec4899; text-shadow: 0 0 8px rgba(236, 72, 153, 0.8); background: rgba(236, 72, 153, 0.15); }
 
-@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+/* 标签上方的小三角 */
+.hotspot-label::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 6px;
+    height: 6px;
+    background: rgba(15, 10, 30, 0.85);
+    border-top: 1px solid currentColor;
+    border-left: 1px solid currentColor;
+}
+
+.hotspot.mid {
+    opacity: 0.75;
+    pointer-events: auto;
+    color: #22d3ee;     /* 【改】从 #a78bfa 改为荧光青 */
+}
+
+.hotspot.high {
+    opacity: 1;
+    pointer-events: auto;
+    color: #fbbf24;     /* 【改】从 #ec4899 改为琥珀金 */
+}
+
+.hotspot.high::before {
+    animation: rotate 4s linear infinite;
+    border-width: 2px;
+    opacity: 1;
+}
+
+.hotspot.high .hotspot-ring {
+    animation: haloPulse 2.2s ease-in-out infinite;
+}
+
+.hotspot.high::after {
+    opacity: 1;
+    animation: marksPulse 2.2s ease-in-out infinite;
+}
+
+.hotspot.high .hotspot-label {
+    background: rgba(251, 191, 36, 0.15);   /* 【改】金色淡底 */
+    color: #fde68a;                          /* 【改】亮金文字 */
+    font-weight: 800;
+}
+
+/* ====== 动画 ====== */
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+@keyframes haloPulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow:
+            0 0 12px currentColor,
+            0 0 24px currentColor,
+            inset 0 0 15px rgba(255, 255, 255, 0.15);
+    }
+    50% {
+        transform: scale(1.06);
+        box-shadow:
+            0 0 20px currentColor,
+            0 0 40px currentColor,
+            inset 0 0 20px rgba(255, 255, 255, 0.25);
+    }
+}
+
+@keyframes marksPulse {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.15); }
+}
 
 /* ====== 角色弹出层 ====== */
 .character-popup { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 200; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding: 20px; pointer-events: none; }
@@ -658,4 +772,69 @@ body.room-mode #bgLayer { display: none; }
     .side { display: none; }
     .main-panel { padding: 32px 24px 24px; }
     .panel-title { font-size: 24px; }
+}
+
+/* ====== 答题反馈样式 ====== */
+.option.correct {
+    background: rgba(74, 222, 128, 0.15);
+    border-color: #4ade80;
+    color: #fff;
+    box-shadow: 0 0 20px rgba(74, 222, 128, 0.3);
+}
+
+.option.wrong {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: #ef4444;
+    color: #fff;
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+}
+
+.explain {
+    margin-top: 12px;
+    padding: 14px 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border-left: 3px solid #ec4899;
+    border-radius: 8px;
+    animation: explainIn 0.3s ease-out;
+}
+
+@keyframes explainIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.explain-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #ec4899;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+}
+
+.explain-text {
+    font-size: 13px;
+    color: #b8b0d0;
+    line-height: 1.6;
+}
+
+.next-btn {
+    margin-top: 14px;
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #a855f7, #ec4899);
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(168, 85, 247, 0.4);
+    transition: all 0.3s;
+}
+
+.next-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(168, 85, 247, 0.6);
 }
