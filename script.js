@@ -12,6 +12,27 @@ let wrongStreak = 0;
 let companionTimer = null;
 let maxComboThisRun = 0;
 
+// === 转场控制 ===
+const transitionLayer = document.getElementById('transitionLayer');
+let transitionTimer = null;
+
+function playTransition(onMid) {
+    transitionLayer.classList.remove('closing');
+    transitionLayer.classList.add('active');
+
+    if (transitionTimer) clearTimeout(transitionTimer);
+    transitionTimer = setTimeout(() => {
+        onMid();
+
+        setTimeout(() => {
+            transitionLayer.classList.add('closing');
+            setTimeout(() => {
+                transitionLayer.classList.remove('active', 'closing');
+            }, 500);
+        }, 100);
+    }, 450);
+}
+
 // === 抽题 ===
 function groupByDim() {
     const groups = { anime: [], gacha: [], jrpg: [], meme: [], music: [], merch: [] };
@@ -41,43 +62,47 @@ function shuffle(arr) {
 function drawQuestions(count) {
     const groups = groupByDim();
     const dims = ['anime', 'gacha', 'jrpg', 'meme', 'music', 'merch'];
-    const lowMediumCount = Math.round(count * 0.8);
-    const hardCount = count - lowMediumCount;
-    const perDimLow = Math.floor(lowMediumCount / 6);
-    const perDimHard = Math.floor(hardCount / 6);
-    let lowRemainder = lowMediumCount - perDimLow * 6;
-    let hardRemainder = hardCount - perDimHard * 6;
+
+    const easyCount   = Math.round(count * 0.5);
+    const mediumCount = Math.round(count * 0.3);
+    const hardCount   = count - easyCount - mediumCount;
 
     const selected = [];
     const usedIds = new Set();
-    const lowPools = {}, hardPools = {};
 
+    const pools = { easy: {}, medium: {}, hard: {} };
     dims.forEach(dim => {
         const s = splitByDifficulty(groups[dim]);
-        lowPools[dim] = shuffle([...s.easy, ...s.medium]);
-        hardPools[dim] = shuffle([...s.hard]);
+        pools.easy[dim]   = shuffle([...s.easy]);
+        pools.medium[dim] = shuffle([...s.medium]);
+        pools.hard[dim]   = shuffle([...s.hard]);
     });
 
-    dims.forEach(dim => {
-        let take = perDimLow;
-        if (lowRemainder > 0) { take++; lowRemainder--; }
-        lowPools[dim].slice(0, take).forEach(q => {
-            if (!usedIds.has(q.id)) { selected.push(q); usedIds.add(q.id); }
+    function drawByDifficulty(diffKey, totalCount) {
+        const perDim = Math.floor(totalCount / 6);
+        let remainder = totalCount - perDim * 6;
+        dims.forEach(dim => {
+            let take = perDim;
+            if (remainder > 0) { take++; remainder--; }
+            pools[diffKey][dim].slice(0, take).forEach(q => {
+                if (!usedIds.has(q.id)) {
+                    selected.push(q);
+                    usedIds.add(q.id);
+                }
+            });
         });
-    });
+    }
 
-    dims.forEach(dim => {
-        let take = perDimHard;
-        if (hardRemainder > 0) { take++; hardRemainder--; }
-        hardPools[dim].slice(0, take).forEach(q => {
-            if (!usedIds.has(q.id)) { selected.push(q); usedIds.add(q.id); }
-        });
-    });
+    drawByDifficulty('easy', easyCount);
+    drawByDifficulty('medium', mediumCount);
+    drawByDifficulty('hard', hardCount);
 
     if (selected.length < count) {
         const rest = shuffle(QUESTIONS.filter(q => !usedIds.has(q.id)));
         selected.push(...rest.slice(0, count - selected.length));
     }
+
+    if (selected.length > count) selected.length = count;
 
     return shuffle(selected);
 }
@@ -121,6 +146,14 @@ function updateCompanion(dim, messageType) {
     }
 }
 
+// === 连击全屏扫光 ===
+function fireMilestone() {
+    const el = document.createElement('div');
+    el.className = 'combo-milestone fire';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 900);
+}
+
 // === 难度自适应 ===
 function adaptDifficulty() {
     const nextIdx = currentQIndex + 1;
@@ -133,7 +166,6 @@ function adaptDifficulty() {
 
     const nextDim = activeQuestions[nextIdx].dim;
 
-    // 优先在后续题目里找同维度、符合难度的题
     for (let i = nextIdx + 1; i < activeQuestions.length; i++) {
         if (activeQuestions[i].difficulty === targetDifficulty && activeQuestions[i].dim === nextDim) {
             [activeQuestions[nextIdx], activeQuestions[i]] = [activeQuestions[i], activeQuestions[nextIdx]];
@@ -142,7 +174,6 @@ function adaptDifficulty() {
             return;
         }
     }
-    // 找不到同维度的，就找任意同难度的
     for (let i = nextIdx + 1; i < activeQuestions.length; i++) {
         if (activeQuestions[i].difficulty === targetDifficulty) {
             [activeQuestions[nextIdx], activeQuestions[i]] = [activeQuestions[i], activeQuestions[nextIdx]];
@@ -181,7 +212,10 @@ document.querySelectorAll('.length-btn').forEach(btn => {
 // 开箱卡片点击
 boxCard.addEventListener('click', () => {
     if (!boxCard.classList.contains('flipped')) {
-        boxCard.classList.add('flipped');
+        boxCard.classList.add('flipped', 'flipping');
+        boxLayer.classList.add('bursting');
+        setTimeout(() => boxLayer.classList.remove('bursting'), 1200);
+        setTimeout(() => boxCard.classList.remove('flipping'), 1000);
     } else {
         boxLayer.classList.add('hidden');
         setTimeout(showRoom, 300);
@@ -199,57 +233,70 @@ function startQuiz() {
 
     activeQuestions.forEach(q => { userQuestionCount[q.dim]++; });
 
-    startScreen.classList.remove('active');
-    quizScreen.classList.add('active');
-    currentQIndex = 0;
-    totalQEl.textContent = activeQuestions.length;
+    playTransition(() => {
+        startScreen.classList.remove('active');
+        quizScreen.classList.add('active');
+        currentQIndex = 0;
+        totalQEl.textContent = activeQuestions.length;
 
-    document.body.classList.remove('room-mode');
-    companion.classList.remove('hidden');
-    renderQuestion();
+        document.body.classList.remove('room-mode');
+        companion.classList.remove('hidden');
+        renderQuestion();
+    });
 }
 
 // === 渲染题目 ===
 function renderQuestion() {
-    const q = activeQuestions[currentQIndex];
-    questionText.textContent = q.question;
-    currentQEl.textContent = currentQIndex + 1;
-    progressFill.style.width = (currentQIndex / activeQuestions.length * 100) + '%';
-    progressFill.classList.add('progress-fill-active');
-    answered = false;
+    // 先淡出
+    optionsEl.classList.add('fading');
 
-    // 难度标签
-    const diffLabel = document.getElementById('quizDifficulty');
-    const difficultyMap = { easy: '入门', medium: '中等', hard: '高难' };
-    const dimMap = { anime: '番剧', gacha: '二游', jrpg: 'JRPG', meme: '梗/同人', music: '音乐', merch: '周边' };
-    diffLabel.textContent = `[ ${dimMap[q.dim]} · ${difficultyMap[q.difficulty]} ]`;
+    setTimeout(() => {
+        const q = activeQuestions[currentQIndex];
+        questionText.textContent = q.question;
+        currentQEl.textContent = currentQIndex + 1;
+        progressFill.style.width = (currentQIndex / activeQuestions.length * 100) + '%';
+        progressFill.classList.add('progress-fill-active');
+        answered = false;
 
-    // 角色陪伴
-    updateCompanion(q.dim, null);
+        // 难度标签
+        const diffLabel = document.getElementById('quizDifficulty');
+        const difficultyMap = { easy: '入门', medium: '中等', hard: '高难' };
+        const dimMap = { anime: '番剧', gacha: '二游', jrpg: 'JRPG', meme: '梗/同人', music: '音乐', merch: '周边' };
+        diffLabel.textContent = `[ ${dimMap[q.dim]} · ${difficultyMap[q.difficulty]} ]`;
 
-    // 随机彩蛋
-    const eggEl = document.getElementById('easterEgg');
-    if (Math.random() < 0.08) {
-        const eggs = [
-            '出题人说他也不知道答案',
-            '这道题有点怪，你自己看着办',
-            '注意：本题包含隐藏知识',
-            '这道题曾难倒过 90% 的测试者'
-        ];
-        eggEl.textContent = '* ' + eggs[Math.floor(Math.random() * eggs.length)];
-        eggEl.classList.remove('hidden');
-    } else {
-        eggEl.classList.add('hidden');
-    }
+        // 连击归零显示
+        const comboEl = document.getElementById('quizCombo');
+        if (comboEl) comboEl.textContent = comboCount > 1 ? `×${comboCount}` : '';
 
-    optionsEl.innerHTML = '';
-    q.options.forEach((opt) => {
-        const btn = document.createElement('button');
-        btn.className = 'option';
-        btn.textContent = opt.text;
-        btn.addEventListener('click', () => selectOption(opt, btn, q));
-        optionsEl.appendChild(btn);
-    });
+        // 角色陪伴
+        updateCompanion(q.dim, null);
+
+        // 随机彩蛋
+        const eggEl = document.getElementById('easterEgg');
+        if (Math.random() < 0.08) {
+            const eggs = [
+                '出题人说他也不知道答案',
+                '这道题有点怪，你自己看着办',
+                '注意：本题包含隐藏知识',
+                '这道题曾难倒过 90% 的测试者'
+            ];
+            eggEl.textContent = '* ' + eggs[Math.floor(Math.random() * eggs.length)];
+            eggEl.classList.remove('hidden');
+        } else {
+            eggEl.classList.add('hidden');
+        }
+
+        optionsEl.innerHTML = '';
+        q.options.forEach((opt) => {
+            const btn = document.createElement('button');
+            btn.className = 'option';
+            btn.textContent = opt.text;
+            btn.addEventListener('click', () => selectOption(opt, btn, q));
+            optionsEl.appendChild(btn);
+        });
+
+        optionsEl.classList.remove('fading');
+    }, 200);
 }
 
 // === 选择选项 ===
@@ -259,6 +306,7 @@ function selectOption(opt, btnEl, q) {
 
     const allBtns = optionsEl.querySelectorAll('.option');
     const comboEl = document.getElementById('quizCombo');
+    const panel = document.querySelector('.main-panel');
 
     if (opt.correct) {
         btnEl.classList.add('correct');
@@ -267,26 +315,53 @@ function selectOption(opt, btnEl, q) {
         wrongStreak = 0;
         if (comboCount > maxComboThisRun) maxComboThisRun = comboCount;
 
+        // 全屏绿光
+        panel.classList.add('flash-correct');
+        setTimeout(() => panel.classList.remove('flash-correct'), 400);
+
         if (comboCount >= 5 && comboCount % 5 === 0) {
             updateCompanion(q.dim, 'streak5');
-            comboEl.textContent = `COMBO ×${comboCount}`;
+            if (comboEl) comboEl.textContent = `COMBO ×${comboCount}`;
+            fireMilestone();
         } else {
             updateCompanion(q.dim, 'correct');
-            comboEl.textContent = comboCount > 1 ? `×${comboCount}` : '';
+            if (comboEl) comboEl.textContent = comboCount > 1 ? `×${comboCount}` : '';
+        }
 
-            // 角色跳动
-            const compImg = document.getElementById('companionImg');
+        // 角色跳动
+        const compImg = document.getElementById('companionImg');
+        if (compImg) {
             compImg.classList.remove('bounce');
             void compImg.offsetWidth;
             compImg.classList.add('bounce');
+        }
+
+        // 连击数字 bump
+        if (comboCount > 1 && comboEl) {
+            comboEl.classList.remove('bump');
+            void comboEl.offsetWidth;
+            comboEl.classList.add('bump');
         }
     } else {
         btnEl.classList.add('wrong');
         comboCount = 0;
         wrongStreak++;
+        allBtns.forEach((b, i) => {
+            if (q.options[i].correct) b.classList.add('correct');
+        });
 
-        // 触发面板震动（用 JS 改 transform，避免触发 CSS 入场动画）
-        const panel = document.querySelector('.main-panel');
+        if (wrongStreak >= 3) {
+            updateCompanion(q.dim, 'streak3wrong');
+        } else {
+            updateCompanion(q.dim, 'wrong');
+        }
+        if (comboEl) comboEl.textContent = '';
+
+        // 全屏红光
+        panel.classList.add('flash-wrong');
+        setTimeout(() => panel.classList.remove('flash-wrong'), 400);
+
+        // 面板震动
         const shakeSeq = [0, -4, 4, -3, 3, -1, 0];
         let shakeIdx = 0;
         const shakeTimer = setInterval(() => {
@@ -297,15 +372,6 @@ function selectOption(opt, btnEl, q) {
                 panel.style.transform = '';
             }
         }, 40);
-        allBtns.forEach((b, i) => {
-            if (q.options[i].correct) b.classList.add('correct');
-        });
-        if (wrongStreak >= 3) {
-            updateCompanion(q.dim, 'streak3wrong');
-        } else {
-            updateCompanion(q.dim, 'wrong');
-        }
-        comboEl.textContent = '';
     }
 
     allBtns.forEach(b => b.style.pointerEvents = 'none');
@@ -342,31 +408,84 @@ function selectOption(opt, btnEl, q) {
     nextBtn.scrollIntoView({ behavior: 'smooth', block: 'end' });
 }
 
-// === 显示房间 ===
 function showRoom() {
-    quizScreen.classList.remove('active');
-    roomScreen.classList.add('active');
-    document.body.classList.add('room-mode');
-    companion.classList.add('hidden');
+    playTransition(() => {
+        quizScreen.classList.remove('active');
+        roomScreen.classList.add('active');
+        document.body.classList.add('room-mode');
+        companion.classList.add('hidden');
 
-    const percentages = {};
+        const percentages = {};
 
-    Object.keys(userScores).forEach(dim => {
-        const total = userQuestionCount[dim];
-        const correct = userScores[dim];
-        const percent = total > 0 ? correct / total : 0;
-        percentages[dim] = percent;
+        Object.keys(userScores).forEach(dim => {
+            const total = userQuestionCount[dim];
+            const correct = userScores[dim];
+            const percent = total > 0 ? correct / total : 0;
+            percentages[dim] = percent;
 
-        const hotspotEl = document.getElementById(`hotspot-${dim}`);
-        hotspotEl.classList.remove('mid', 'high');
+            const hotspotEl = document.getElementById(`hotspot-${dim}`);
+            hotspotEl.classList.remove('mid', 'high');
 
-        if (percent >= 0.7) hotspotEl.classList.add('high');
-        else if (percent >= 0.4) hotspotEl.classList.add('mid');
+            if (percent >= 0.7) hotspotEl.classList.add('high');
+            else if (percent >= 0.4) hotspotEl.classList.add('mid');
 
-        hotspotEl.onclick = () => handleItemClick(dim, percent);
+            hotspotEl.onclick = () => handleItemClick(dim, percent);
+        });
+
+        updateRank(percentages);
+
+        setTimeout(() => drawRadar(percentages), 400);
+    });
+}
+
+// === 称号 + 类型计算 ===
+function updateRank(percentages) {
+    const dims = ['anime', 'gacha', 'jrpg', 'meme', 'music', 'merch'];
+
+    let totalCorrect = 0;
+    let totalQuestions = 0;
+    dims.forEach(dim => {
+        totalCorrect += userScores[dim];
+        totalQuestions += userQuestionCount[dim];
+    });
+    const totalPercent = totalQuestions > 0 ? totalCorrect / totalQuestions : 0;
+
+    let rank = '圈外人士';
+    if (totalPercent >= 1.0)       rank = '二次元之神';
+    else if (totalPercent >= 0.9)  rank = '婆罗门';
+    else if (totalPercent >= 0.75) rank = '老宅';
+    else if (totalPercent >= 0.6)  rank = '资深宅';
+    else if (totalPercent >= 0.4)  rank = '普通爱好者';
+    else if (totalPercent >= 0.2)  rank = '萌新';
+
+    document.getElementById('rankTitle').textContent = rank;
+
+    let topDim = 'anime';
+    let topPercent = -1;
+    let minPercent = 2;
+    dims.forEach(dim => {
+        const p = percentages[dim] || 0;
+        if (p > topPercent) { topPercent = p; topDim = dim; }
+        if (p < minPercent) { minPercent = p; }
     });
 
-    setTimeout(() => drawRadar(percentages), 400);
+    const typeMap = {
+        anime: '追 番 型 宅',
+        gacha: '抽 卡 型 宅',
+        jrpg:  '练 级 型 宅',
+        meme:  '整 活 型 宅',
+        music: '耳 朵 型 宅',
+        merch: '吃 谷 型 宅'
+    };
+
+    let typeText;
+    if (topPercent - minPercent < 0.25) {
+        typeText = '全 能 型 宅';
+    } else {
+        typeText = typeMap[topDim];
+    }
+
+    document.getElementById('rankType').textContent = typeText;
 }
 
 // === 雷达图 ===
@@ -552,7 +671,9 @@ document.getElementById('retryBtn').addEventListener('click', () => {
         item.onclick = null;
     });
 
-    document.body.classList.remove('room-mode');
-    roomScreen.classList.remove('active');
-    startScreen.classList.add('active');
+    playTransition(() => {
+        document.body.classList.remove('room-mode');
+        roomScreen.classList.remove('active');
+        startScreen.classList.add('active');
+    });
 });

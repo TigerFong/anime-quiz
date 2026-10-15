@@ -12,6 +12,15 @@
         <div class="bg-glow"></div>
     </div>
 
+    <!-- 转场遮罩 -->
+    <div id="transitionLayer">
+        <div class="transition-ring"></div>
+        <div class="transition-ring-2"></div>
+        <div class="transition-core">
+            <span class="transition-symbol">◆</span>
+        </div>
+    </div>
+
     <div class="app">
         <aside class="side side-left">
             <div class="side-line"></div>
@@ -129,25 +138,26 @@
         <button id="retryBtn" class="retry-btn">↻ 重新测试</button>
 
         <div class="room-scroll-container">
+            <!-- 第一屏：称号 + 雷达图 -->
             <div class="room-page radar-page">
+                <div class="rank-area">
+                    <div class="rank-label">你 的 二 次 元 称 号</div>
+                    <div class="rank-title" id="rankTitle">——</div>
+                    <div class="rank-type" id="rankType">——</div>
+                </div>
+
                 <div class="radar-title">成 分 雷 达 图</div>
                 <div class="radar-wrapper">
                     <canvas id="radarCanvas" width="420" height="420"></canvas>
                 </div>
-                <div class="radar-legend">
-                    <span><i class="dot dot-anime"></i>番剧</span>
-                    <span><i class="dot dot-gacha"></i>二游</span>
-                    <span><i class="dot dot-jrpg"></i>JRPG</span>
-                    <span><i class="dot dot-meme"></i>梗/同人</span>
-                    <span><i class="dot dot-music"></i>音乐</span>
-                    <span><i class="dot dot-merch"></i>周边</span>
-                </div>
+
                 <div class="scroll-hint">
                     <span>向下滑动进入房间</span>
                     <span class="arrow">▼</span>
                 </div>
             </div>
 
+            <!-- 第二屏：房间 -->
             <div class="room-page room-page-bg">
                 <div class="room-aspect">
                     <img src="images/room_bg.png" class="room-bg" alt="房间">
@@ -178,7 +188,7 @@
                 </div>
                 <div class="scroll-hint scroll-hint-top">
                     <span class="arrow">▲</span>
-                    <span>向上滑动返回雷达图</span>
+                    <span>向上滑动返回 DNA</span>
                 </div>
             </div>
         </div>
