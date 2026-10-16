@@ -558,7 +558,9 @@ function drawRadar(percentages) {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const dpr = window.devicePixelRatio || 1;
-    const size = 420;
+    const size = 460;
+    const x = cx + Math.cos(a) * (r + 55);   // 原来是 r + 45
+    const y = cy + Math.sin(a) * (r + 55);
 
     canvas.width = size * dpr;
     canvas.height = size * dpr;

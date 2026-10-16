@@ -542,6 +542,7 @@ body.room-mode #bgLayer { display: none; }
 .dot-anime { background: #ff69b4; color: #ff69b4; }
 .dot-gacha { background: #a78bfa; color: #a78bfa; }
 .dot-jrpg  { background: #60a5fa; color: #60a5fa; }
+.dot-galgame { background: #a5d8ff; color: #a5d8ff; }
 .dot-meme  { background: #fbbf24; color: #fbbf24; }
 .dot-music { background: #34d399; color: #34d399; }
 .dot-merch { background: #f472b6; color: #f472b6; }
