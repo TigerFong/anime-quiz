@@ -1,7 +1,7 @@
 // === 状态变量 ===
 let currentQIndex = 0;
-let userScores = { anime: 0, gacha: 0, jrpg: 0, meme: 0, music: 0, merch: 0 };
-let userQuestionCount = { anime: 0, gacha: 0, jrpg: 0, meme: 0, music: 0, merch: 0 };
+let userScores = { anime: 0, gacha: 0, jrpg: 0, galgame: 0, meme: 0, music: 0, merch: 0 };
+let userQuestionCount = { anime: 0, gacha: 0, jrpg: 0, galgame: 0, meme: 0, music: 0, merch: 0 };
 let activeQuestions = [];
 let selectedCount = 30;
 let answered = false;
@@ -46,7 +46,7 @@ function playTransition(onMid) {
 
 // === 抽题 ===
 function groupByDim() {
-    const groups = { anime: [], gacha: [], jrpg: [], meme: [], music: [], merch: [] };
+    const groups = { anime: [], gacha: [], jrpg: [], galgame: [], meme: [], music: [], merch: [] };
     QUESTIONS.forEach(q => {
         if (groups[q.dim]) groups[q.dim].push(q);
     });
@@ -72,7 +72,7 @@ function shuffle(arr) {
 
 function drawQuestions(count) {
     const groups = groupByDim();
-    const dims = ['anime', 'gacha', 'jrpg', 'meme', 'music', 'merch'];
+    const dims = ['anime', 'gacha', 'jrpg', 'galgame', 'meme', 'music', 'merch'];
 
     const easyCount   = Math.round(count * 0.5);
     const mediumCount = Math.round(count * 0.3);
@@ -90,8 +90,8 @@ function drawQuestions(count) {
     });
 
     function drawByDifficulty(diffKey, totalCount) {
-        const perDim = Math.floor(totalCount / 6);
-        let remainder = totalCount - perDim * 6;
+        const perDim = Math.floor(totalCount / dims.length);
+        let remainder = totalCount - perDim * dims.length;
         dims.forEach(dim => {
             let take = perDim;
             if (remainder > 0) { take++; remainder--; }
@@ -300,8 +300,8 @@ boxCard.addEventListener('click', () => {
 // === 开始答题 ===
 function startQuiz() {
     activeQuestions = drawQuestions(selectedCount);
-    userScores = { anime: 0, gacha: 0, jrpg: 0, meme: 0, music: 0, merch: 0 };
-    userQuestionCount = { anime: 0, gacha: 0, jrpg: 0, meme: 0, music: 0, merch: 0 };
+    userScores = { anime: 0, gacha: 0, jrpg: 0, galgame: 0, meme: 0, music: 0, merch: 0 };
+    userQuestionCount = { anime: 0, gacha: 0, jrpg: 0, galgame: 0, meme: 0, music: 0, merch: 0 };
     comboCount = 0;
     wrongStreak = 0;
     maxComboThisRun = 0;
@@ -503,7 +503,7 @@ function showRoom() {
 
 // === 称号 + 类型计算 ===
 function updateRank(percentages) {
-    const dims = ['anime', 'gacha', 'jrpg', 'meme', 'music', 'merch'];
+    const dims = ['anime', 'gacha', 'jrpg', 'galgame', 'meme', 'music', 'merch'];
 
     let totalCorrect = 0;
     let totalQuestions = 0;
@@ -533,12 +533,13 @@ function updateRank(percentages) {
     });
 
     const typeMap = {
-        anime: '追 番 型 宅',
-        gacha: '抽 卡 型 宅',
-        jrpg:  '练 级 型 宅',
-        meme:  '整 活 型 宅',
-        music: '耳 朵 型 宅',
-        merch: '吃 谷 型 宅'
+        anime:   '追 番 型 宅',
+        gacha:   '抽 卡 型 宅',
+        jrpg:    '练 级 型 宅',
+        galgame: '读 本 型 宅',
+        meme:    '整 活 型 宅',
+        music:   '耳 朵 型 宅',
+        merch:   '吃 谷 型 宅'
     };
 
     let typeText;
@@ -566,8 +567,8 @@ function drawRadar(percentages) {
     ctx.scale(dpr, dpr);
 
     const cx = size / 2, cy = size / 2, r = size / 2 - 70;
-    const dims = ['anime', 'gacha', 'jrpg', 'meme', 'music', 'merch'];
-    const labels = ['番剧', '二游', 'JRPG', '梗/同人', '音乐', '周边'];
+    const dims = ['anime', 'gacha', 'jrpg', 'galgame', 'meme', 'music', 'merch'];
+    const labels = ['番剧', '二游', 'JRPG', 'Galgame', '梗/同人', '音乐', '周边'];
     const n = dims.length;
     const angle = Math.PI * 2 / n;
 
@@ -719,8 +720,8 @@ function renderDialogueNode() {
 // === 重新测试 ===
 document.getElementById('retryBtn').addEventListener('click', () => {
     currentQIndex = 0;
-    userScores = { anime: 0, gacha: 0, jrpg: 0, meme: 0, music: 0, merch: 0 };
-    userQuestionCount = { anime: 0, gacha: 0, jrpg: 0, meme: 0, music: 0, merch: 0 };
+    userScores = { anime: 0, gacha: 0, jrpg: 0, galgame: 0, meme: 0, music: 0, merch: 0 };
+    userQuestionCount = { anime: 0, gacha: 0, jrpg: 0, galgame: 0, meme: 0, music: 0, merch: 0 };
     currentNodeId = 'start';
     currentDialogueDim = '';
     currentTier = 'low';

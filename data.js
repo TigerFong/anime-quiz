@@ -2097,7 +2097,763 @@ const QUESTIONS = [
       { "text": "盒蛋不能选款，扭蛋可以选款", "correct": false },
       { "text": "不知道 / 没听过", "correct": false }
     ],
-    "explain": "买扭蛋买的是刺激，和赌博唯一的区别是扭蛋不会让你上社会新闻。"
+        "explain": "买扭蛋买的是刺激，和赌博唯一的区别是扭蛋不会让你上社会新闻。"
+  },
+  {
+    "id": 151,
+    "dim": "galgame",
+    "difficulty": "easy",
+    "question": "“能哭的地方，只有厕所，和爸爸的怀里。”这句经典台词出自哪部作品？",
+    "options": [
+      { "text": "《AIR》", "correct": false },
+      { "text": "《Kanon》", "correct": false },
+      { "text": "《CLANNAD》", "correct": true },
+      { "text": "《Angel Beats!》", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "冈崎汐用一句话把全世界的父亲都整破防了。CLANNAD告诉你：人生就是先给你一颗糖，再给你一记闷棍，最后告诉你糖其实一直都在。"
+  },
+  {
+    "id": 152,
+    "dim": "galgame",
+    "difficulty": "easy",
+    "question": "“这一切，都是命运石之门的选择。”这句名言出自哪部作品？",
+    "options": [
+      { "text": "《混沌之子》", "correct": false },
+      { "text": "《命运石之门》", "correct": true },
+      { "text": "《机器人笔记》", "correct": false },
+      { "text": "《白色相簿2》", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "冈部伦太郎用中二病拯救了世界，顺便把观众也搞成了中二病。"
+  },
+  {
+    "id": 153,
+    "dim": "galgame",
+    "difficulty": "easy",
+    "question": "Galgame术语“S/L大法”中的S和L分别代表什么？",
+    "options": [
+      { "text": "Start / Load", "correct": false },
+      { "text": "Save / Load", "correct": true },
+      { "text": "Stop / Leave", "correct": false },
+      { "text": "Select / Level", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "Save/Load大法，雅号“谢夫罗德大法”。读档一时爽，一直读档一直爽，最后你甚至忘了自己原本想选什么。"
+  },
+  {
+    "id": 154,
+    "dim": "galgame",
+    "difficulty": "easy",
+    "question": "“明明是我先来的……”这句名台词出自哪部作品？",
+    "options": [
+      { "text": "《白色相簿2》", "correct": true },
+      { "text": "《School Days》", "correct": false },
+      { "text": "《路人女主的养成方法》", "correct": false },
+      { "text": "《我的青春恋爱物语果然有问题》", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "小木曾雪菜用一句话奠定了白学的基础，也顺便让无数玩家的胃开始隐隐作痛。"
+  },
+  {
+    "id": 155,
+    "dim": "galgame",
+    "difficulty": "easy",
+    "question": "《CLANNAD》中，古河渚最喜欢的不明生物叫什么？",
+    "options": [
+      { "text": "团子", "correct": true },
+      { "text": "海星", "correct": false },
+      { "text": "丸子", "correct": false },
+      { "text": "大福", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "团子大家族，古河渚的精神支柱兼洗脑神曲。看完之后脑子里会一直回响“团子~团子~团子大家族”。"
+  },
+  {
+    "id": 157,
+    "dim": "galgame",
+    "difficulty": "easy",
+    "question": "《命运石之门》的主角冈部伦太郎给自己起的“中二病”称号是什么？",
+    "options": [
+      { "text": "凤凰院凶真", "correct": true },
+      { "text": "黑暗骑士", "correct": false },
+      { "text": "疯狂科学家", "correct": false },
+      { "text": "时间观测者", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "凤凰院凶真，全名“狂气的疯狂科学家”。中二病治不好，但能拯救世界。"
+  },
+  {
+    "id": 158,
+    "dim": "galgame",
+    "difficulty": "medium",
+    "question": "Key社的“催泪三部曲”通常指哪三部作品？",
+    "options": [
+      { "text": "《Kanon》《AIR》《CLANNAD》", "correct": true },
+      { "text": "《AIR》《CLANNAD》《Angel Beats!》", "correct": false },
+      { "text": "《CLANNAD》《Angel Beats!》《Charlotte》", "correct": false },
+      { "text": "《Kanon》《CLANNAD》《Little Busters!》", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "麻枝准：我不是在写游戏，我是在批发纸巾。"
+  },
+  {
+    "id": 159,
+    "dim": "galgame",
+    "difficulty": "medium",
+    "question": "“催泪游戏”（泣きゲー）这个术语通常指什么类型的galgame？",
+    "options": [
+      { "text": "恐怖游戏", "correct": false },
+      { "text": "以感人剧情让玩家哭泣的游戏", "correct": true },
+      { "text": "结局必定是悲剧的游戏", "correct": false },
+      { "text": "主角经常哭的游戏", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "前半段暖心，中段分离，后段感人团圆——标准配方。哭完之后你会觉得：这钱花得值。"
+  },
+  {
+    "id": 160,
+    "dim": "galgame",
+    "difficulty": "medium",
+    "question": "柚子社的《千恋＊万花》最初于哪一年发售？",
+    "options": [
+      { "text": "2014年", "correct": false },
+      { "text": "2015年", "correct": false },
+      { "text": "2016年", "correct": true },
+      { "text": "2017年", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "玩完之后你会觉得：现实中的恋爱为什么没有BGM？"
+  },
+  {
+    "id": 161,
+    "dim": "galgame",
+    "difficulty": "medium",
+    "question": "以下哪部作品不是Nitroplus开发的？",
+    "options": [
+      { "text": "《沙耶之歌》", "correct": false },
+      { "text": "《Phantom 幻灵镇魂曲》", "correct": false },
+      { "text": "《装甲恶鬼村正》", "correct": false },
+      { "text": "《命运石之门》", "correct": true },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "《命运石之门》是5pb.开发的，Nitroplus只是参与了企划。"
+  },
+  {
+    "id": 162,
+    "dim": "galgame",
+    "difficulty": "medium",
+    "question": "《Muv-Luv Alternative》最初于哪一年发售？",
+    "options": [
+      { "text": "2003年", "correct": false },
+      { "text": "2004年", "correct": false },
+      { "text": "2005年", "correct": false },
+      { "text": "2006年", "correct": true },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "从“超王道学园恋爱”一路崩坏成“人类存亡之战”，用一部游戏教会你什么叫“笑着进去，哭着出来”。"
+  },
+  {
+    "id": 163,
+    "dim": "galgame",
+    "difficulty": "medium",
+    "question": "虚渊玄担任编剧的《沙耶之歌》属于什么类型的作品？",
+    "options": [
+      { "text": "纯爱日常", "correct": false },
+      { "text": "悬疑恐怖", "correct": true },
+      { "text": "热血战斗", "correct": false },
+      { "text": "校园恋爱", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "虚渊玄：我写的不是恐怖游戏，是跨越物种的纯爱。玩家：你管这叫纯爱？"
+  },
+  {
+    "id": 164,
+    "dim": "galgame",
+    "difficulty": "medium",
+    "question": "麻枝准在Key社作品中经常插入的“突兀环节”被玩家戏称为什么梗？",
+    "options": [
+      { "text": "棒球", "correct": true },
+      { "text": "足球", "correct": false },
+      { "text": "篮球", "correct": false },
+      { "text": "乒乓球", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "不管剧情多催泪，中间一定要打一场棒球。玩家：我在哭，他们在打棒球。"
+  },
+  {
+    "id": 165,
+    "dim": "galgame",
+    "difficulty": "hard",
+    "question": "2002年发售的《Ever17 -the out of infinity-》由哪家公司开发？",
+    "options": [
+      { "text": "Key", "correct": false },
+      { "text": "KID", "correct": true },
+      { "text": "Leaf", "correct": false },
+      { "text": "Age", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "Ever17用“叙述性诡计”把玩家骗得团团转，通关后你会想重新玩一遍看看自己到底错过了什么。"
+  },
+  {
+    "id": 166,
+    "dim": "galgame",
+    "difficulty": "hard",
+    "question": "Leaf社的《To Heart》最初于哪一年发售？",
+    "options": [
+      { "text": "1995年", "correct": false },
+      { "text": "1996年", "correct": false },
+      { "text": "1997年", "correct": true },
+      { "text": "1998年", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "1997年的游戏，比你很多读者的年龄都大。"
+  },
+  {
+    "id": 167,
+    "dim": "galgame",
+    "difficulty": "hard",
+    "question": "同人社团07th Expansion的《寒蝉鸣泣之时》最初是通过什么渠道发布的？",
+    "options": [
+      { "text": "Steam", "correct": false },
+      { "text": "Comic Market同人展", "correct": true },
+      { "text": "官方商店", "correct": false },
+      { "text": "手机应用", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "龙骑士07一个人写剧本、画立绘、做音乐，然后卖出了百万级销量。同人奇迹，不过如此。"
+  },
+  {
+    "id": 168,
+    "dim": "galgame",
+    "difficulty": "hard",
+    "question": "《混沌之子》（CHAOS;CHILD）最初于哪一年、哪个平台发售？",
+    "options": [
+      { "text": "2013年，PS3", "correct": false },
+      { "text": "2014年，Xbox One", "correct": true },
+      { "text": "2015年，PS4", "correct": false },
+      { "text": "2016年，PC", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "科学ADV系列第四作，也是系列最黑暗的一作。妄想是真的，科学是假的，我的心理阴影是真的。"
+  },
+  {
+    "id": 169,
+    "dim": "galgame",
+    "difficulty": "hard",
+    "question": "八月社的《秽翼的尤斯蒂娅》（脏翅膀）与《大图书馆的牧羊人》最大的风格差异是什么？",
+    "options": [
+      { "text": "前者是剧情向，后者是废萌向", "correct": true },
+      { "text": "前者是废萌向，后者是剧情向", "correct": false },
+      { "text": "两者都是剧情向", "correct": false },
+      { "text": "两者都是废萌向", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "八月社：我们既能让你哭，也能让你笑。玩家：但你的画风一直没变过。"
+  },
+  {
+    "id": 170,
+    "dim": "galgame",
+    "difficulty": "hard",
+    "question": "Age社的《你所期望的永远》（君が望む永遠）以什么类型的剧情闻名？",
+    "options": [
+      { "text": "科幻战斗", "correct": false },
+      { "text": "三角关系与催泪", "correct": true },
+      { "text": "悬疑推理", "correct": false },
+      { "text": "日常搞笑", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "三角关系、车祸、失忆、等待——催泪要素齐活。Age社：我们做的是“超王道”。玩家：超王道就是超虐心是吧？"
+  },
+  {
+    "id": 171,
+    "dim": "galgame",
+    "difficulty": "hard",
+    "question": "SAGA PLANETS的《金色Loveriche》属于什么类型的作品？",
+    "options": [
+      { "text": "悬疑恐怖", "correct": false },
+      { "text": "剧情催泪", "correct": false },
+      { "text": "恋爱喜剧", "correct": true },
+      { "text": "科幻战斗", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "轻松、愉快、甜度超标。玩完之后你会觉得：现实要是这么甜就好了。"
+  },
+  {
+    "id": 173,
+    "dim": "galgame",
+    "difficulty": "easy",
+    "question": "《白色相簿2》中著名的“白学现场”和“届不到的爱恋”，主要是在调侃哪种剧情套路？",
+    "options": [
+      { "text": "主角拯救世界的王道热血", "correct": false },
+      { "text": "极其胃疼的三角恋修罗场与党争", "correct": true },
+      { "text": "悬疑推理中的连环杀人案", "correct": false },
+      { "text": "异世界转生后的后宫日常", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "冬马小三，雪菜碧池。白学家的本质就是看着屏幕里的角色胃疼，自己却在屏幕外爽到飞起。"
+  },
+  {
+    "id": 174,
+    "dim": "galgame",
+    "difficulty": "easy",
+    "question": "以制作《Air》《Kanon》《CLANNAD》等“泣きゲー”（催泪游戏）而闻名业界，被称为“键社”的厂商是哪家？",
+    "options": [
+      { "text": "Type-Moon", "correct": false },
+      { "text": "Key", "correct": true },
+      { "text": "Leaf", "correct": false },
+      { "text": "柚子社", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "Key社三大催泪弹，玩完不哭的不是人类，是泪腺坏死的赛博格。"
+  },
+  {
+    "id": 175,
+    "dim": "galgame",
+    "difficulty": "easy",
+    "question": "在《寒蝉鸣泣之时》中，龙宫礼奈黑化时最常喊出的那句令人毛骨悚然的经典台词是什么？",
+    "options": [
+      { "text": "骗人！！（嘘だッ！！）", "correct": true },
+      { "text": "男人变态有什么错！", "correct": false },
+      { "text": "我要把你做成便当！", "correct": false },
+      { "text": "咪啪～☆", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "柴刀女始祖。当你以为她在卖萌捡垃圾时，她已经在思考把你切成几块比较对称了。"
+  },
+  {
+    "id": 176,
+    "dim": "galgame",
+    "difficulty": "easy",
+    "question": "《Nekopara》（巧克力与香子兰）这部在全球大卖的作品，其核心卖点是什么？",
+    "options": [
+      { "text": "硬核的赛博朋克黑客战", "correct": false },
+      { "text": "第一人称视角的猫娘同居日常", "correct": true },
+      { "text": "极其复杂的战棋策略玩法", "correct": false },
+      { "text": "深刻的哲学与宗教探讨", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "Galgame界的猫咪统治计划，用实力证明了只要加上兽耳和动态立绘，人类的智商就会自动清零。"
+  },
+  {
+    "id": 177,
+    "dim": "galgame",
+    "difficulty": "medium",
+    "question": "以“废萌”日常、高质量原画和极其稳定的发糖剧情闻名，代表作有《千恋＊万花》《魔女的夜宴》的厂商是？",
+    "options": [
+      { "text": "柚子社（Yuzusoft）", "correct": true },
+      { "text": "八月社（August）", "correct": false },
+      { "text": "枕社（Makura）", "correct": false },
+      { "text": "戏画（Giga）", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "柚子社的剧情？不存在的。看小春和宁宁卖萌，顺便听听魔性的OP，就足够你傻笑一整晚了。"
+  },
+  {
+    "id": 178,
+    "dim": "galgame",
+    "difficulty": "medium",
+    "question": "《Muv-Luv Alternative》被誉为燃系与绝望感并存的机战神作，其核心剧情是人类在地球上对抗哪种外星生物？",
+    "options": [
+      { "text": "使徒", "correct": false },
+      { "text": "拟态（Mimic）", "correct": false },
+      { "text": "BETA", "correct": true },
+      { "text": "异虫（Zerg）", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "从校园恋爱打到宇宙末日，机甲男人的浪漫就是被BETA吃掉。"
+  },
+  {
+    "id": 179,
+    "dim": "galgame",
+    "difficulty": "medium",
+    "question": "在Nitroplus出品的《沙耶之歌》中，男主郁纪眼中唯一纯洁美丽的“美少女”沙耶，其真实面目其实是？",
+    "options": [
+      { "text": "拥有超能力的转学生", "correct": false },
+      { "text": "不可名状的异次元肉块怪物", "correct": true },
+      { "text": "人工智能虚拟投影", "correct": false },
+      { "text": "男主的第二人格", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "玩完之后你看路边的生肉都会觉得眉清目秀，san值狂掉。"
+  },
+  {
+    "id": 180,
+    "dim": "galgame",
+    "difficulty": "medium",
+    "question": "在视觉小说中，玩家历经千辛万苦打通所有线路后解锁的“True End”（TE），通常代表什么？",
+    "options": [
+      { "text": "全员死亡的Bad End", "correct": false },
+      { "text": "揭示世界真相与核心诡计的最终结局", "correct": true },
+      { "text": "没有任何剧情的纯彩蛋后日谈", "correct": false },
+      { "text": "官方为了骗钱出的DLC路线", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "True End，编剧终于大发慈悲把坑填完的结局，虽然看完你可能会觉得人生失去了目标。"
+  },
+  {
+    "id": 181,
+    "dim": "galgame",
+    "difficulty": "medium",
+    "question": "八月社（August）的口碑佳作《秽翼的尤斯蒂娅》，其故事舞台设定在一个怎样的特殊环境中？",
+    "options": [
+      { "text": "沉入海底的末日避难所", "correct": false },
+      { "text": "漂浮在空中的阶级城市“诺瓦斯·艾蒂尔”", "correct": true },
+      { "text": "被大雪封锁的俄罗斯小镇", "correct": false },
+      { "text": "充满恶魔的地下迷宫", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "在下水道和贫民窟的“牢狱”里找纯爱，这大概就是废土世界的硬核浪漫。"
+  },
+  {
+    "id": 182,
+    "dim": "galgame",
+    "difficulty": "medium",
+    "question": "以下哪部作品不属于二次元著名的“轮回系/无限流”视觉小说？",
+    "options": [
+      { "text": "《Ever17 -the out of infinity-》", "correct": false },
+      { "text": "《寒蝉鸣泣之时》", "correct": false },
+      { "text": "《命运石之门》（Steins;Gate）", "correct": false },
+      { "text": "《樱之诗》（サクラノ詩）", "correct": true },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "《樱之诗》是枕社的电波艺术哲学，不是轮回系。如果你想在里面找时空穿越，建议去挂个眼科。"
+  },
+  {
+    "id": 183,
+    "dim": "galgame",
+    "difficulty": "medium",
+    "question": "制作了《美好的每一天～不连续的存在～》（素晴日）和《终之空》，以极度电波、哲学和猎奇元素闻名的厂商是？",
+    "options": [
+      { "text": "KeroQ", "correct": true },
+      { "text": "Innocent Grey", "correct": false },
+      { "text": "Liar-soft", "correct": false },
+      { "text": "Clockup", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "玩懂了的成了哲学家，没玩懂的成了精神病，总之都不正常。"
+  },
+  {
+    "id": 184,
+    "dim": "galgame",
+    "difficulty": "hard",
+    "question": "“视觉小说”（Visual Novel）这个专有名词，最初是由哪家公司注册并推广开来，从而奠定了该游戏类型的基础？",
+    "options": [
+      { "text": "Type-Moon", "correct": false },
+      { "text": "Leaf（叶子社）", "correct": true },
+      { "text": "ELF", "correct": false },
+      { "text": "AliceSoft", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "Leaf社不仅搞出了白学，还顺手定义了“视觉小说”这个词，没有他们，你现在只能叫它“带图PPT”。"
+  },
+  {
+    "id": 185,
+    "dim": "galgame",
+    "difficulty": "hard",
+    "question": "被国内玩家戏称为“中二社”，以极其华丽的OP动画（新海诚曾参与）而闻名，最终却因经营不善破产的Galgame厂商是？",
+    "options": [
+      { "text": "minori", "correct": true },
+      { "text": "Age", "correct": false },
+      { "text": "Nitroplus", "correct": false },
+      { "text": "5pb.", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "OP做得比正片还烧钱，演出华丽到炸裂，最后成功把自己做破产了，这就是艺术家的末路。"
+  },
+  {
+    "id": 186,
+    "dim": "galgame",
+    "difficulty": "hard",
+    "question": "在90年代的经典《To Heart》中，哪位机器人女仆角色的成功，直接奠定了后世Galgame中“机娘/女仆”属性的基础？",
+    "options": [
+      { "text": "玛露琪（Multi）", "correct": true },
+      { "text": "樱坂叶月", "correct": false },
+      { "text": "姬川亚由美", "correct": false },
+      { "text": "保科美咲", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "没有她，现在的二次元大概会少了一半的机械女仆咖啡厅和报废的电池。"
+  },
+  {
+    "id": 187,
+    "dim": "galgame",
+    "difficulty": "hard",
+    "question": "以下哪位脚本家没有以写“泣きゲー”（催泪系）或治愈系日常见长，而是以“黑深残”和“爱的战士”自居？",
+    "options": [
+      { "text": "麻枝准", "correct": false },
+      { "text": "久弥直树", "correct": false },
+      { "text": "龙骑士07", "correct": false },
+      { "text": "虚渊玄", "correct": true },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "别人发糖他发刀，别人治愈他致郁，老虚的字典里就没有“大团圆”这三个字。"
+  },
+  {
+    "id": 188,
+    "dim": "galgame",
+    "difficulty": "hard",
+    "question": "Type-Moon的《魔法使之夜》在最初发售时，其最大的系统特色是什么？",
+    "options": [
+      { "text": "引入了复杂的3D迷宫探索", "correct": false },
+      { "text": "全程无选项，纯靠极具张力的演出和文本推进", "correct": true },
+      { "text": "需要连接网络进行多人对战", "correct": false },
+      { "text": "包含了大量的养成和打工小游戏", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "蘑菇觉得，看苍崎青子揍人不需要你插手，你只管喊666和欣赏新海诚级别的光影就行了。"
+  },
+  {
+    "id": 189,
+    "dim": "galgame",
+    "difficulty": "hard",
+    "question": "被誉为“悬疑AVG天花板”、利用双视角叙事诡计震惊业界的《Ever17 -the out of infinity-》最初发售于哪一年？",
+    "options": [
+      { "text": "1999年", "correct": false },
+      { "text": "2002年", "correct": true },
+      { "text": "2006年", "correct": false },
+      { "text": "2010年", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "打越锭太郎用一套叙述性诡计把全世界玩家骗得团团转，至今仍是悬疑AVG不可逾越的叹息之墙。"
+  },
+  {
+    "id": 190,
+    "dim": "galgame",
+    "difficulty": "easy",
+    "question": "被称为“人生”且以团子大家族为主题曲的经典催泪 Galgame 是哪一部？",
+    "options": [
+      { "text": "《Kanon》", "correct": false },
+      { "text": "《AIR》", "correct": false },
+      { "text": "《CLANNAD》", "correct": true },
+      { "text": "《Little Busters!》", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "CLANNAD 就是人生，看完之后连打个喷嚏都觉得自己长大了。"
+  },
+  {
+    "id": 191,
+    "dim": "galgame",
+    "difficulty": "easy",
+    "question": "名句“又到了白色相簿的季节”出自哪部以三角恋修罗场闻名的 Galgame？",
+    "options": [
+      { "text": "《白色相簿2》", "correct": true },
+      { "text": "《初雪樱》", "correct": false },
+      { "text": "《School Days》", "correct": false },
+      { "text": "《秋之回忆2》", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "冬马小三、雪菜碧池？白学专家们至今还在为了这两个女人撕得不可开交。"
+  },
+  {
+    "id": 192,
+    "dim": "galgame",
+    "difficulty": "easy",
+    "question": "以“世界线收束”、“微波炉穿越”为核心设定的著名科幻视觉小说是？",
+    "options": [
+      { "text": "《命运石之门》（Steins;Gate）", "correct": true },
+      { "text": "《混沌之头》（ChäoS;HEAd）", "correct": false },
+      { "text": "《机器人笔记》（ROBOTICS;NOTES）", "correct": false },
+      { "text": "《匿名代码》（Anonymous;Code）", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "这一切都是命运石之门的选择！一切为了 Dr. Pepper 的荣耀！"
+  },
+  {
+    "id": 194,
+    "dim": "galgame",
+    "difficulty": "easy",
+    "question": "以“雏见泽症候群”和“惨剧轮回”为剧情核心的同人三大奇迹之一作品是？",
+    "options": [
+      { "text": "《海猫鸣泣之时》", "correct": false },
+      { "text": "《寒蝉鸣泣之时》", "correct": true },
+      { "text": "《神隐之狼》", "correct": false },
+      { "text": "《死神观测者》", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "柴刀少女的微笑，只要听到“啪嗒啪嗒”的脚步声，就该准备重开下一轮了。"
+  },
+  {
+    "id": 195,
+    "dim": "galgame",
+    "difficulty": "medium",
+    "question": "因旗下作品经常包含“废萌”、“拔作转纯爱”、“绫地宁宁”等元素而被粉丝戏称为“废萌天花板”的厂商是？",
+    "options": [
+      { "text": "Key", "correct": false },
+      { "text": "Yuzu-Soft（柚子社）", "correct": true },
+      { "text": "Minori（中原社）", "correct": false },
+      { "text": "Nitroplus", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "今天也是快乐的柚子厨！只要宁宁扣桌子，玩家的心就跟着颤抖。"
+  },
+  {
+    "id": 196,
+    "dim": "galgame",
+    "difficulty": "medium",
+    "question": "老牌 Galgame 厂商 Leaf（叶子社）在 1990 年代发售的“Leaf 视觉小说系列”第一作是？",
+    "options": [
+      { "text": "《痕》", "correct": false },
+      { "text": "《雫》", "correct": true },
+      { "text": "《To Heart》", "correct": false },
+      { "text": "《白色相簿》", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "视觉小说（Visual Novel）概念的开山鼻祖，电波系怪异风的早期代表。"
+  },
+  {
+    "id": 197,
+    "dim": "galgame",
+    "difficulty": "medium",
+    "question": "由虚渊玄担任剧本、以纯爱（物理）与肉块视觉错觉为主题的 Nitroplus 知名作品是？",
+    "options": [
+      { "text": "《装甲恶鬼村正》", "correct": false },
+      { "text": "《沙耶之歌》", "correct": true },
+      { "text": "《斩魔大圣》", "correct": false },
+      { "text": "《鬼哭街》", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "老虚的“温馨纯爱故事”，看完之后这辈子都无法直视猪肝和番茄酱。"
+  },
+  {
+    "id": 198,
+    "dim": "galgame",
+    "difficulty": "medium",
+    "question": "著名视觉小说《Ever17》（时空轮回）中，故事发生的主要场景是？",
+    "options": [
+      { "text": "封闭的地下实验室", "correct": false },
+      { "text": "深海潜水游乐园“LeMU”", "correct": true },
+      { "text": "孤岛上的豪华别墅", "correct": false },
+      { "text": "宇宙空间站", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "打通 BW 线那一刻的震惊，直接把老玩家的脑干给烧糊了。"
+  },
+  {
+    "id": 199,
+    "dim": "galgame",
+    "difficulty": "medium",
+    "question": "以“永不妥协的美学”、“画风极其精致”著称，后因资金等原因宣布解散的知名厂商 minori，其标志性口号是？",
+    "options": [
+      { "text": "We change ordinary days into dramas.", "correct": true },
+      { "text": "Life is like a visual novel.", "correct": false },
+      { "text": "Key to your heart.", "correct": false },
+      { "text": "Pure love is dynamic.", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "把每一帧都做成壁纸的偏执狂厂商，终究还是倒在了时代变革的前夜。"
+  },
+  {
+    "id": 200,
+    "dim": "galgame",
+    "difficulty": "medium",
+    "question": "在《Angel Beats!》和《Summer Pockets》中均担任主要剧本撰写/企划的核心创作者是？",
+    "options": [
+      { "text": "龙骑士07", "correct": false },
+      { "text": "奈须蘑菇", "correct": false },
+      { "text": "麻枝准（大魔王）", "correct": true },
+      { "text": "志仓千代丸", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "大魔王的棒球与音乐执念，不管什么题材，最后总能给你整出一段棒球局。"
+  },
+  {
+    "id": 201,
+    "dim": "galgame",
+    "difficulty": "medium",
+    "question": "作品《美少女万华镜》系列的官方画师（原画）是哪一位？",
+    "options": [
+      { "text": "樋上至", "correct": false },
+      { "text": "八宝备仁", "correct": true },
+      { "text": "狗神煌", "correct": false },
+      { "text": "矢野茜", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "莲华酱的盛世美颜，万华镜系列直接把无数阿宅的身体掏空。"
+  },
+  {
+    "id": 202,
+    "dim": "galgame",
+    "difficulty": "hard",
+    "question": "被称为二次元“燃系”与“绝望系”巅峰、拥有 Unlimited 与 Alternative 篇章的宏大机甲视觉小说是？",
+    "options": [
+      { "text": "《Muv-Luv》系列", "correct": true },
+      { "text": "《Cross Channel》", "correct": false },
+      { "text": "《装甲恶鬼村正》", "correct": false },
+      { "text": "《BALDR SKY》", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "吃人外星人 BETA 的恐怖噩梦，纯爱开局转眼变成炼狱战场。"
+  },
+  {
+    "id": 203,
+    "dim": "galgame",
+    "difficulty": "hard",
+    "question": "由田中罗密欧执笔、被称为“电波系”极致与心理学解构神作的视觉小说作品是？",
+    "options": [
+      { "text": "《Cross Channel》（交叉频道）", "correct": true },
+      { "text": "《家族计划》", "correct": false },
+      { "text": "《人类衰退之后》", "correct": false },
+      { "text": "《Rewrite》", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "七个电波广播员的极致孤独，懂的人自然懂，不懂的人只觉得在看天书。"
+  },
+  {
+    "id": 204,
+    "dim": "galgame",
+    "difficulty": "hard",
+    "question": "开发了《大番长》《大恶司》《兰斯》系列等著名策略 Galgame 的日本老牌游戏公司是？",
+    "options": [
+      { "text": "AliceSoft（A社）", "correct": true },
+      { "text": "EHOFT", "correct": false },
+      { "text": "Liar-soft", "correct": false },
+      { "text": "BaseSon", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "兰斯鬼畜王的硬核玩法，表面上是 Galgame，实际上比 RTS 还要考验脑力。"
+  },
+  {
+    "id": 205,
+    "dim": "galgame",
+    "difficulty": "hard",
+    "question": "以“风车”和“教会”为标志性元素、出品了《秽翼的尤斯蒂娅》《千之刃涛、桃花染之皇姬》的著名厂商是？",
+    "options": [
+      { "text": "August（八月社）", "correct": true },
+      { "text": "Saga Planets", "correct": false },
+      { "text": "Lump of Sugar", "correct": false },
+      { "text": "Palette", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "八月脸包办天下！哪怕角色长得都像姐妹，打光和剧情依然稳如老狗。"
+  },
+  {
+    "id": 206,
+    "dim": "galgame",
+    "difficulty": "hard",
+    "question": "在 KID 社经典的“Memories Off”（秋之回忆）系列第一作中，贯穿全剧的女主角彩花在故事开局的状态是？",
+    "options": [
+      { "text": "正在国外留学", "correct": false },
+      { "text": "已经因交通事故身亡", "correct": true },
+      { "text": "处于失忆状态", "correct": false },
+      { "text": "是主角的亲妹妹", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "雨何时会停？白月光彩花的离去，开启了无数玩家长达二十年的“秋之回忆”。"
+  },
+  {
+    "id": 207,
+    "dim": "galgame",
+    "difficulty": "hard",
+    "question": "由 5pb./MAGES. 推出的“科学 ADV 系列”中，官方定义的首部作品（1st）是？",
+    "options": [
+      { "text": "《Steins;Gate》（命运石之门）", "correct": false },
+      { "text": "《ChäoS;HEAd》（混沌之头）", "correct": true },
+      { "text": "《Robotics;Notes》（机器人笔记）", "correct": false },
+      { "text": "《Occultic;Nine》（超自然九人组）", "correct": false },
+      { "text": "不知道 / 没听过", "correct": false }
+    ],
+    "explain": "宅男拓巳的妄想世界，在石头门爆火之前，科学 ADV 的基石就已经奠定了。"
   }
 ]
 
@@ -3003,6 +3759,156 @@ const DIALOGUES = {
                 options: []
             }
         }
+    },
+
+    // ========== Galgame：白羽 ==========
+    galgame: {
+        low: {
+            start: {
+                text: "……你看这类作品吗。文字冒险，视觉小说那种。",
+                options: [
+                    { text: "听说过，没怎么接触", next: "a1" },
+                    { text: "玩过一点，觉得太慢", next: "a2" }
+                ]
+            },
+            a1: {
+                text: "没关系。这种作品……本来就不是给所有人准备的。",
+                options: [
+                    { text: "那你为什么喜欢？", next: "b1" },
+                    { text: "确实是挑人的类型", next: "b2" }
+                ]
+            },
+            a2: {
+                text: "慢是真的。……但慢下来之后，才会看到细节。",
+                options: [
+                    { text: "有道理，是我心太急", next: "b1" },
+                    { text: "我还是喜欢快一点的", next: "b2" }
+                ]
+            },
+            b1: {
+                text: "……因为它安静。翻开之后，世界就只剩你和那几页文字。",
+                options: [
+                    { text: "听起来挺治愈的", next: "c" },
+                    { text: "我好像有点懂了", next: "c" }
+                ]
+            },
+            b2: {
+                text: "嗯。喜欢什么就看什么，不用勉强。",
+                options: [
+                    { text: "你说得对", next: "c" },
+                    { text: "谢谢，不觉得我浅薄就好", next: "c" }
+                ]
+            },
+            c: {
+                text: "……其实我只是想说，如果你哪天想试试，我可以推荐短的。一晚上能读完那种。",
+                options: [
+                    { text: "好啊，记下了", next: "d" },
+                    { text: "那到时候找你", next: "d" }
+                ]
+            },
+            d: {
+                text: "……嗯。那我先回去了。还有半本没读完。",
+                options: []
+            }
+        },
+
+        mid: {
+            start: {
+                text: "……你也在读这类作品吗。最近在读哪一部。",
+                options: [
+                    { text: "在补一部老经典", next: "a1" },
+                    { text: "刚通关一部催泪向的", next: "a2" }
+                ]
+            },
+            a1: {
+                text: "补老作品……很好。现在很多新的桥段，其实老作品里都有。",
+                options: [
+                    { text: "对，老作品的氛围不一样", next: "b1" },
+                    { text: "但有些老系统太劝退了", next: "b2" }
+                ]
+            },
+            a2: {
+                text: "……催泪向的。我上个月也读完一部，缓了三天。",
+                options: [
+                    { text: "我也是，好几天缓不过来", next: "b1" },
+                    { text: "我虐点比较高，还行", next: "b2" }
+                ]
+            },
+            b1: {
+                text: "……你更看重哪一边。剧情，还是角色。",
+                options: [
+                    { text: "剧情，角色是剧情的载体", next: "c" },
+                    { text: "角色，剧情是角色的舞台", next: "c" }
+                ]
+            },
+            b2: {
+                text: "……虐点高也挺好的。至少不会像我一样，一周不敢开新游戏。",
+                options: [
+                    { text: "那种空虚感确实难受", next: "c" },
+                    { text: "我会先开一部轻松的过渡", next: "c" }
+                ]
+            },
+            c: {
+                text: "……你有没有那种，读完一部长篇之后，想找人聊，但身边没人读过的感觉。",
+                options: [
+                    { text: "有，太多次了", next: "d" },
+                    { text: "有，憋得难受", next: "d" }
+                ]
+            },
+            d: {
+                text: "……嗯。那今天算是遇到了。下次可以再聊。",
+                options: []
+            }
+        },
+
+        high: {
+            start: {
+                text: "……等一下。你刚才说的那部——你注意到了那一段的叙述结构吗。",
+                options: [
+                    { text: "注意到了，那一段是全书的核心", next: "a1" },
+                    { text: "没特别留意，你说说看", next: "a2" }
+                ]
+            },
+            a1: {
+                text: "……（眼睛亮起来）你也发现了。那一段的视角切换，不是随意的。",
+                options: [
+                    { text: "对，我读第二遍才反应过来", next: "b1" },
+                    { text: "我做了笔记，翻了好几遍", next: "b2" }
+                ]
+            },
+            a2: {
+                text: "……那我把书借你。读第二遍的时候，从第七章往回看。",
+                options: [
+                    { text: "好，我一定仔细读", next: "b1" },
+                    { text: "你有笔记吗，我想看看", next: "b2" }
+                ]
+            },
+            b1: {
+                text: "……你知道吗，好的脚本家写东西，不是为了让你一次读完的。",
+                options: [
+                    { text: "是为了让你反复回来", next: "c" },
+                    { text: "是为了让作品活得比作者久", next: "c" }
+                ]
+            },
+            b2: {
+                text: "……我也有笔记。做了三年，六本。你想看的话——啊，我是不是说太多了。",
+                options: [
+                    { text: "没有，继续说", next: "c" },
+                    { text: "六本也太厉害了", next: "c" }
+                ]
+            },
+            c: {
+                text: "……平时我不太说这些的。因为没人接得住。",
+                options: [
+                    { text: "今天我接得住", next: "d" },
+                    { text: "那你以后可以多说", next: "d" }
+                ]
+            },
+            d: {
+                text: "……嗯。（低头翻了两页书）……下次带笔记来给你看。",
+                options: []
+            }
+        }
     }
 };
 
@@ -3011,6 +3917,7 @@ const CHARACTERS = {
     anime:  { name: '小春', title: '追番狂', img: 'images/chun.png' },
     gacha:  { name: '凛',   title: '欧皇',   img: 'images/rin.png' },
     jrpg:   { name: '雪乃', title: '练级狂', img: 'images/yukino.png' },
+    galgame: { name: '白羽', title: '读本家', img: 'images/shirayu.png' },
     meme:   { name: '小葵', title: '整活王', img: 'images/aoi.png' },
     music:  { name: '诗织', title: '感性派', img: 'images/shiori.png' },
     merch:  { name: '千寻', title: '收藏家', img: 'images/chihiro.png' }
@@ -3315,6 +4222,56 @@ const COMPANION_REACTIONS = {
             '别急，我先把这个摆好。',
             '这一套还差一个就集齐了。',
             '有事？我正忙着给谷子分类。'
+        ]
+    },
+
+    galgame: {
+        name: '白羽',
+        title: '读本家',
+        img: 'images/shirayu.png',
+        intro: [
+            '……到我了。',
+            '文字类的题。可以吗。',
+            '……嗯。这题我来出。'
+        ],
+        correct: [
+            '……对。',
+            '你读过。',
+            '……嗯。',
+            '答得不错。'
+        ],
+        wrong: [
+            '……这部挺有名的。',
+            '没关系。',
+            '……回去补一下吧。'
+        ],
+        streak3: [
+            '……你读过不少。',
+            '连对三题。……看得出来。',
+            '……嗯，不错。'
+        ],
+        streak5: [
+            '……你比我想的读得多。',
+            '……这个水平，我服气。',
+            '……（轻轻点头）'
+        ],
+        streak3wrong: [
+            '……这部分确实冷。',
+            '老作品对新人不太友好。',
+            '……不急。'
+        ],
+        streak5wrong: [
+            '……我们换个话题吧。',
+            '……也许这个类型不适合你。',
+            '……没事的。'
+        ],
+        idle: [
+            '……（翻页声）',
+            '等一下。这段还没读完。',
+            '……别打扰……不，你说吧。',
+            '……嗯。什么事。',
+            '（把书往下压了压，露出眼睛）',
+            '……我看到关键处了。稍等。'
         ]
     }
 };
