@@ -892,9 +892,9 @@ body.room-mode #bgLayer { display: none; }
     right: 40px;
     z-index: 50;
     display: flex;
-    align-items: flex-end;
-    gap: 12px;
-    pointer-events: none;
+    align-items: center;   /* ← 改了 */
+    gap: 14px;
+    pointer-events: auto;   /* 顺便把这个也确认一下 */
     transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
@@ -929,7 +929,7 @@ body.room-mode #bgLayer { display: none; }
 .companion-bubble::after {
     content: '';
     position: absolute;
-    bottom: 14px;
+    top: 20px;
     right: -6px;
     width: 10px;
     height: 10px;
@@ -1464,7 +1464,7 @@ body::before {
 
 #transitionLayer.active {
     opacity: 1;
-    pointer-events: auto;
+    pointer-events: none;
 }
 
 /* 主圆环：从中心扩散到全屏 */
@@ -1658,3 +1658,71 @@ body::before {
 }
 .rank-type::before { left: -14px; }
 .rank-type::after  { right: -14px; }
+/* ====== 角色互动增强 ====== */
+.companion {
+    pointer-events: auto;   /* 原来是 none，改成可点击 */
+}
+
+.companion-img {
+    cursor: pointer;
+    transition: all 0.25s;
+}
+
+.companion-img:hover {
+    transform: scale(1.06);
+    box-shadow: 0 0 30px rgba(236, 72, 153, 0.9);
+}
+
+.companion-img:active {
+    transform: scale(0.96);
+}
+
+/* 头像周围脉动光环 */
+.companion-img-wrap {
+    position: relative;
+    width: 110px;
+    height: 110px;
+}
+
+/* 答对时，头像周围冒绿色小星星 */
+.companion-img.correct-flash {
+    animation: correctFlash 0.5s ease-out;
+}
+@keyframes correctFlash {
+    0%   { box-shadow: 0 0 20px rgba(236, 72, 153, 0.6); }
+    50%  { box-shadow: 0 0 40px rgba(74, 222, 128, 1); }
+    100% { box-shadow: 0 0 20px rgba(236, 72, 153, 0.6); }
+}
+
+/* 答错时，头像左右抖动 */
+.companion-img.wrong-flash {
+    animation: wrongFlash 0.4s ease-out;
+}
+@keyframes wrongFlash {
+    0%, 100% { transform: translateX(0); }
+    25%      { transform: translateX(-5px); }
+    75%      { transform: translateX(5px); }
+}
+
+/* 气泡打字机光标 */
+.companion-bubble::before {
+    content: '';
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    width: 6px;
+    height: 10px;
+    background: #ec4899;
+    box-shadow: 0 0 8px #ec4899;
+    animation: cursorBlink 0.8s steps(1) infinite;
+    opacity: 0;
+}
+
+.companion-bubble.typing::before {
+    opacity: 1;
+}
+
+@keyframes cursorBlink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}

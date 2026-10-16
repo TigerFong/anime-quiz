@@ -5,12 +5,18 @@ let userQuestionCount = { anime: 0, gacha: 0, jrpg: 0, meme: 0, music: 0, merch:
 let activeQuestions = [];
 let selectedCount = 30;
 let answered = false;
+let typeTimer = null;
 
 // 游戏元素状态
 let comboCount = 0;
 let wrongStreak = 0;
 let companionTimer = null;
 let maxComboThisRun = 0;
+
+// 角色反应系统
+let lastCompanionDim = null;
+let dimStreak = 0;
+let dimWrongStreak = 0;
 
 // === 转场控制 ===
 const transitionLayer = document.getElementById('transitionLayer');
@@ -21,8 +27,13 @@ function playTransition(onMid) {
     transitionLayer.classList.add('active');
 
     if (transitionTimer) clearTimeout(transitionTimer);
+
     transitionTimer = setTimeout(() => {
-        onMid();
+        try {
+            onMid();
+        } catch (e) {
+            console.error('转场中出错：', e);
+        }
 
         setTimeout(() => {
             transitionLayer.classList.add('closing');
@@ -107,41 +118,86 @@ function drawQuestions(count) {
     return shuffle(selected);
 }
 
-// === 角色陪伴 ===
-const COMPANION_MSG = {
-    correct: ['不错。', '答对了。', '可以啊。', '有点东西。', '保持状态。', '嗯。'],
-    wrong: ['……没关系。', '这题有点难。', '别在意。', '下一题加油。', '记一下这个。', '这种题就是陷阱。'],
-    streak5: ['稳得一批。', '你今天状态很好。', '连对五题，厉害。', '这个水平，可以了。'],
-    streak3wrong: ['……要不要休息一下？', '别急，慢慢来。', '深呼吸。', '下一题轻松点。']
-};
-
+// === 角色陪伴（带反应系统） ===
 function showBubble(text) {
     const bubble = document.getElementById('companionBubble');
-    bubble.textContent = text;
-    bubble.classList.add('show');
+    bubble.textContent = '';
+    bubble.classList.add('show', 'typing');
+
     if (companionTimer) clearTimeout(companionTimer);
+    if (typeTimer) clearInterval(typeTimer);
+
+    let idx = 0;
+    typeTimer = setInterval(() => {
+        bubble.textContent = text.slice(0, idx + 1);
+        idx++;
+        if (idx >= text.length) {
+            clearInterval(typeTimer);
+            typeTimer = null;
+            bubble.classList.remove('typing');
+        }
+    }, 40);
+
     companionTimer = setTimeout(() => {
         bubble.classList.remove('show');
-    }, 2200);
+    }, text.length * 40 + 2000);
 }
 
 function updateCompanion(dim, messageType) {
-    const char = CHARACTERS[dim];
-    if (!char) return;
+    const reaction = COMPANION_REACTIONS[dim];
+    if (!reaction) return;
+
     const img = document.getElementById('companionImg');
     const companion = document.getElementById('companion');
     companion.classList.remove('hidden');
 
-    if (img.getAttribute('src') !== char.img) {
-        img.style.opacity = 0;
-        setTimeout(() => {
-            img.src = char.img;
-            img.style.opacity = 1;
-        }, 150);
+    // 换维度 → 切换角色 + 显示开场白
+    const isNewDim = lastCompanionDim !== dim;
+    if (isNewDim) {
+        lastCompanionDim = dim;
+        dimStreak = 0;
+        dimWrongStreak = 0;
+
+        if (img.getAttribute('src') !== reaction.img) {
+            img.style.opacity = 0;
+            setTimeout(() => {
+                img.src = reaction.img;
+                img.style.opacity = 1;
+            }, 150);
+        }
+
+        const introPool = reaction.intro;
+        showBubble(introPool[Math.floor(Math.random() * introPool.length)]);
+        return;
     }
 
-    if (messageType && COMPANION_MSG[messageType]) {
-        const pool = COMPANION_MSG[messageType];
+    if (!messageType) return;
+
+    let pool = null;
+
+    if (messageType === 'correct') {
+        dimStreak++;
+        dimWrongStreak = 0;
+        if (dimStreak >= 5 && reaction.streak5) pool = reaction.streak5;
+        else if (dimStreak >= 3 && reaction.streak3) pool = reaction.streak3;
+        else pool = reaction.correct;
+
+        img.classList.remove('correct-flash');
+        void img.offsetWidth;
+        img.classList.add('correct-flash');
+    } else if (messageType === 'wrong') {
+        dimWrongStreak++;
+        dimStreak = 0;
+        if (dimWrongStreak >= 5 && reaction.streak5wrong) pool = reaction.streak5wrong;
+        else if (dimWrongStreak >= 3 && reaction.streak3wrong) pool = reaction.streak3wrong;
+        else pool = reaction.wrong;
+
+        img.classList.remove('wrong-flash');
+        void img.offsetWidth;
+        img.classList.add('wrong-flash');
+    }
+
+    if (pool) {
         showBubble(pool[Math.floor(Math.random() * pool.length)]);
     }
 }
@@ -199,14 +255,33 @@ const boxLayer = document.getElementById('boxLayer');
 const boxCard = document.getElementById('boxCard');
 
 // === 初始化 ===
+
+// 开始按钮
 document.getElementById('startBtn').addEventListener('click', startQuiz);
 
+// 题数选择按钮
 document.querySelectorAll('.length-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('.length-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         selectedCount = parseInt(btn.dataset.count);
     });
+});
+
+// 点击头像 → 说一句随机吐槽
+document.getElementById('companionImg').addEventListener('click', () => {
+    if (!lastCompanionDim) return;
+    const reaction = COMPANION_REACTIONS[lastCompanionDim];
+    if (!reaction) return;
+
+    const pool = reaction.idle || [...reaction.correct, ...reaction.wrong];
+    const line = pool[Math.floor(Math.random() * pool.length)];
+    showBubble(line);
+
+    const img = document.getElementById('companionImg');
+    img.classList.remove('bounce');
+    void img.offsetWidth;
+    img.classList.add('bounce');
 });
 
 // 开箱卡片点击
@@ -230,6 +305,9 @@ function startQuiz() {
     comboCount = 0;
     wrongStreak = 0;
     maxComboThisRun = 0;
+    lastCompanionDim = null;
+    dimStreak = 0;
+    dimWrongStreak = 0;
 
     activeQuestions.forEach(q => { userQuestionCount[q.dim]++; });
 
@@ -247,7 +325,6 @@ function startQuiz() {
 
 // === 渲染题目 ===
 function renderQuestion() {
-    // 先淡出
     optionsEl.classList.add('fading');
 
     setTimeout(() => {
@@ -258,20 +335,16 @@ function renderQuestion() {
         progressFill.classList.add('progress-fill-active');
         answered = false;
 
-        // 难度标签
         const diffLabel = document.getElementById('quizDifficulty');
         const difficultyMap = { easy: '入门', medium: '中等', hard: '高难' };
         const dimMap = { anime: '番剧', gacha: '二游', jrpg: 'JRPG', meme: '梗/同人', music: '音乐', merch: '周边' };
         diffLabel.textContent = `[ ${dimMap[q.dim]} · ${difficultyMap[q.difficulty]} ]`;
 
-        // 连击归零显示
         const comboEl = document.getElementById('quizCombo');
         if (comboEl) comboEl.textContent = comboCount > 1 ? `×${comboCount}` : '';
 
-        // 角色陪伴
         updateCompanion(q.dim, null);
 
-        // 随机彩蛋
         const eggEl = document.getElementById('easterEgg');
         if (Math.random() < 0.08) {
             const eggs = [
@@ -315,20 +388,17 @@ function selectOption(opt, btnEl, q) {
         wrongStreak = 0;
         if (comboCount > maxComboThisRun) maxComboThisRun = comboCount;
 
-        // 全屏绿光
         panel.classList.add('flash-correct');
         setTimeout(() => panel.classList.remove('flash-correct'), 400);
 
         if (comboCount >= 5 && comboCount % 5 === 0) {
-            updateCompanion(q.dim, 'streak5');
-            if (comboEl) comboEl.textContent = `COMBO ×${comboCount}`;
             fireMilestone();
-        } else {
-            updateCompanion(q.dim, 'correct');
-            if (comboEl) comboEl.textContent = comboCount > 1 ? `×${comboCount}` : '';
         }
 
-        // 角色跳动
+        updateCompanion(q.dim, 'correct');
+
+        if (comboEl) comboEl.textContent = comboCount > 1 ? `×${comboCount}` : '';
+
         const compImg = document.getElementById('companionImg');
         if (compImg) {
             compImg.classList.remove('bounce');
@@ -336,7 +406,6 @@ function selectOption(opt, btnEl, q) {
             compImg.classList.add('bounce');
         }
 
-        // 连击数字 bump
         if (comboCount > 1 && comboEl) {
             comboEl.classList.remove('bump');
             void comboEl.offsetWidth;
@@ -350,18 +419,13 @@ function selectOption(opt, btnEl, q) {
             if (q.options[i].correct) b.classList.add('correct');
         });
 
-        if (wrongStreak >= 3) {
-            updateCompanion(q.dim, 'streak3wrong');
-        } else {
-            updateCompanion(q.dim, 'wrong');
-        }
+        updateCompanion(q.dim, 'wrong');
+
         if (comboEl) comboEl.textContent = '';
 
-        // 全屏红光
         panel.classList.add('flash-wrong');
         setTimeout(() => panel.classList.remove('flash-wrong'), 400);
 
-        // 面板震动
         const shakeSeq = [0, -4, 4, -3, 3, -1, 0];
         let shakeIdx = 0;
         const shakeTimer = setInterval(() => {
@@ -376,7 +440,6 @@ function selectOption(opt, btnEl, q) {
 
     allBtns.forEach(b => b.style.pointerEvents = 'none');
 
-    // 解释
     const explainEl = document.createElement('div');
     explainEl.className = 'explain';
     explainEl.innerHTML = `
@@ -385,7 +448,6 @@ function selectOption(opt, btnEl, q) {
     `;
     optionsEl.appendChild(explainEl);
 
-    // 下一题按钮
     const nextBtn = document.createElement('button');
     nextBtn.className = 'next-btn';
     nextBtn.textContent = currentQIndex + 1 < activeQuestions.length ? '下 一 题' : '查 看 结 果';
@@ -408,6 +470,7 @@ function selectOption(opt, btnEl, q) {
     nextBtn.scrollIntoView({ behavior: 'smooth', block: 'end' });
 }
 
+// === 显示房间 ===
 function showRoom() {
     playTransition(() => {
         quizScreen.classList.remove('active');
@@ -426,8 +489,8 @@ function showRoom() {
             const hotspotEl = document.getElementById(`hotspot-${dim}`);
             hotspotEl.classList.remove('mid', 'high');
 
-            if (percent >= 0.7) hotspotEl.classList.add('high');
-            else if (percent >= 0.4) hotspotEl.classList.add('mid');
+            if (percent >= 0.8) hotspotEl.classList.add('high');
+            else if (percent >= 0.5) hotspotEl.classList.add('mid');
 
             hotspotEl.onclick = () => handleItemClick(dim, percent);
         });
@@ -609,7 +672,7 @@ let clickCounts = {};
 let pendingSpecialNode = null;
 
 function handleItemClick(dim, percent) {
-    if (percent < 0.4) return;
+    if (percent < 0.5) return;
 
     const char = CHARACTERS[dim];
     document.getElementById('charImg').src = char.img;
@@ -617,8 +680,8 @@ function handleItemClick(dim, percent) {
     currentDialogueDim = dim;
 
     let tier = 'low';
-    if (percent >= 0.85) tier = 'high';
-    else if (percent >= 0.6) tier = 'mid';
+    if (percent >= 0.8) tier = 'high';
+    else if (percent >= 0.5) tier = 'mid';
 
     currentTier = tier;
     currentNodeId = 'start';
@@ -665,6 +728,9 @@ document.getElementById('retryBtn').addEventListener('click', () => {
     pendingSpecialNode = null;
     comboCount = 0;
     wrongStreak = 0;
+    lastCompanionDim = null;
+    dimStreak = 0;
+    dimWrongStreak = 0;
 
     document.querySelectorAll('.hotspot').forEach(item => {
         item.classList.remove('mid', 'high');
